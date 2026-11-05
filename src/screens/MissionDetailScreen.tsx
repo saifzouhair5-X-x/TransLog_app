@@ -1,0 +1,130 @@
+import { Check, Circle, CircleDot, MapPin, Truck, X } from 'lucide-react';
+import { Button } from '@/components/Button';
+import { Card } from '@/components/Card';
+import { ScreenHeader } from '@/components/ScreenHeader';
+import { ScreenShell } from '@/components/ScreenShell';
+import { StatusBadge } from '@/components/StatusBadge';
+import { cn } from '@/lib/cn';
+import { currentTime } from '@/lib/format';
+import { isGroupage, totalPalettes } from '@/lib/missions';
+import { buildTimeline, type TimelineState } from '@/lib/timeline';
+import type { Driver, ScreenProps } from '@/lib/types';
+
+interface MissionDetailScreenProps extends ScreenProps {
+  driver: Driver;
+}
+
+export function MissionDetailScreen({ mission, updateMission, goTo, back, addAlert, driver }: MissionDetailScreenProps) {
+  const lastStop = mission.stops[mission.stops.length - 1];
+  const timeline = buildTimeline(mission);
+  const pending = mission.statut === 'a_accepter';
+
+  const accept = () => {
+    updateMission({ statut: 'acceptee', acceptedAt: currentTime(), etape: 'vehicle-check' });
+    addAlert('Mission acceptée', `Vous avez accepté la mission #${mission.id} (${mission.origin} → ${mission.destination}).`);
+    goTo('vehicle-check');
+  };
+
+  return (
+    <ScreenShell
+      header={<ScreenHeader title={`Mission #${mission.id}`} subtitle={`${mission.origin} → ${mission.destination}`} onBack={back} />}
+      footer={
+        pending ? (
+          <div className="grid grid-cols-2 gap-3">
+            <Button variant="danger" onClick={() => goTo('refusal')}>
+              Refuser
+            </Button>
+            <Button onClick={accept}>Accepter</Button>
+          </div>
+        ) : undefined
+      }
+    >
+      <div className="flex items-center justify-between gap-3">
+        <StatusBadge status={mission.statut} />
+        {isGroupage(mission) && (
+          <span className="rounded-full bg-slate-200 px-3 py-1 text-sm font-semibold text-slate-700">Groupage</span>
+        )}
+      </div>
+
+      <Card className="divide-y divide-slate-200 p-0">
+        <InfoRow label="Départ prévu" value={mission.departPrevu} />
+        <InfoRow label="Arrivée prévue" value={lastStop.arriveePrevue} />
+        <InfoRow label="Délai" value={mission.delai} />
+        <InfoRow label="Localisation" value={mission.localisation} />
+        <InfoRow label="Marchandise" value={`${mission.goods} · ${totalPalettes(mission)} palettes`} />
+      </Card>
+
+      <Card className="divide-y divide-slate-200 p-0">
+        <div className="flex items-center gap-2 p-4 text-sm font-bold uppercase tracking-wide text-slate-500">
+          <Truck size={16} />
+          Matricules
+        </div>
+        <InfoRow label="Tracteur" value={driver.tracteur} />
+        <InfoRow label="Remorque" value={driver.remorque} />
+      </Card>
+
+      <section className="space-y-3">
+        <h2 className="px-1 text-sm font-bold uppercase tracking-wide text-slate-500">
+          Points de livraison ({mission.stops.length})
+        </h2>
+        {mission.stops.map((stop, index) => (
+          <Card key={stop.id} className="flex gap-3 p-4">
+            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-night text-sm font-bold text-white">
+              {index + 1}
+            </span>
+            <div className="min-w-0 flex-1 space-y-1">
+              <p className="text-[18px] font-bold leading-tight">{stop.ville}</p>
+              <p className="text-[15px] text-slate-600">{stop.site}</p>
+              <p className="flex items-start gap-1.5 text-sm text-slate-500">
+                <MapPin size={15} className="mt-0.5 shrink-0" />
+                {stop.adresse}
+              </p>
+              <p className="text-sm text-slate-500">
+                Créneau {stop.window.start} – {stop.window.end} · {stop.palettes} palettes
+              </p>
+            </div>
+          </Card>
+        ))}
+      </section>
+
+      <section className="space-y-3">
+        <h2 className="px-1 text-sm font-bold uppercase tracking-wide text-slate-500">Suivi de la mission</h2>
+        <Card>
+          <ol>
+            {timeline.map((step, index) => (
+              <li key={step.id} className="flex gap-3">
+                <div className="flex flex-col items-center">
+                  <TimelineIcon state={step.state} />
+                  {index < timeline.length - 1 && <span className="my-1 w-0.5 flex-1 bg-slate-200" />}
+                </div>
+                <div className={cn('min-w-0 pb-4', step.state === 'pending' && 'opacity-60')}>
+                  <p className={cn('text-[16px] font-bold leading-tight', step.state === 'ko' && 'text-danger')}>
+                    {step.label}
+                  </p>
+                  <p className="text-sm text-slate-500">{step.detail}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </Card>
+      </section>
+    </ScreenShell>
+  );
+}
+
+function InfoRow({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="flex items-start justify-between gap-4 p-4">
+      <span className="text-[15px] text-slate-500">{label}</span>
+      <span className="text-right text-[17px] font-semibold leading-snug">{value}</span>
+    </div>
+  );
+}
+
+function TimelineIcon({ state }: { state: TimelineState }) {
+  const base = 'flex h-7 w-7 shrink-0 items-center justify-center rounded-full';
+  if (state === 'done') return <span className={cn(base, 'bg-success text-white')}><Check size={15} strokeWidth={3} /></span>;
+  if (state === 'ko') return <span className={cn(base, 'bg-danger text-white')}><X size={15} strokeWidth={3} /></span>;
+  if (state === 'current') return <span className={cn(base, 'bg-sun text-night')}><CircleDot size={15} /></span>;
+  return <span className={cn(base, 'border-2 border-slate-300 text-slate-400')}><Circle size={11} /></span>;
+}
