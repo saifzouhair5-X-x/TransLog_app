@@ -8,6 +8,10 @@ export function totalPalettes(mission: Mission): number {
   return mission.stops.reduce((sum, stop) => sum + stop.palettes, 0);
 }
 
+export function totalWeight(mission: Mission): number {
+  return mission.stops.reduce((sum, stop) => sum + stop.poids, 0);
+}
+
 export function isGroupage(mission: Mission): boolean {
   return mission.stops.length > 1;
 }

@@ -5,13 +5,15 @@ import { Card } from '@/components/Card';
 import { InfoBanner } from '@/components/InfoBanner';
 import { ScreenHeader } from '@/components/ScreenHeader';
 import { ScreenShell } from '@/components/ScreenShell';
-import { DOCUMENTS } from '@/data/documents';
+import { documentsForMission } from '@/data/documents';
 import { currentTime } from '@/lib/format';
 import type { DocumentId, ScreenProps } from '@/lib/types';
 
 export function DocumentsScreen({ mission, updateMission, goTo, back, notify, addAlert }: ScreenProps) {
-  const scannedCount = DOCUMENTS.filter((doc) => mission.documents[doc.id] !== null).length;
-  const canValidate = mission.documents.cmr !== null;
+  const docs = documentsForMission(mission);
+  const scannedCount = docs.filter((doc) => mission.documents[doc.id] !== null).length;
+  const requiredDoc = mission.type === 'nationale' ? 'bl' : 'cmr';
+  const canValidate = mission.documents[requiredDoc] !== null;
 
   const scan = (id: DocumentId, fileName: string) => {
     updateMission({ documents: { ...mission.documents, [id]: fileName } });
@@ -20,9 +22,11 @@ export function DocumentsScreen({ mission, updateMission, goTo, back, notify, ad
 
   const validate = () => {
     updateMission({ documentsAt: currentTime(), etape: 'trip' });
-    addAlert('Documents scannés', `${scannedCount} / ${DOCUMENTS.length} document(s) scanné(s) pour la mission #${mission.id}.`);
+    addAlert('Documents scannés', `${scannedCount} / ${docs.length} document(s) scanné(s) pour la mission #${mission.id}.`);
     goTo('trip');
   };
+
+  const requiredLabel = mission.type === 'nationale' ? 'Le Bon de livraison (BL) est obligatoire.' : 'Le CMR est obligatoire.';
 
   return (
     <ScreenShell
@@ -33,16 +37,26 @@ export function DocumentsScreen({ mission, updateMission, goTo, back, notify, ad
         </Button>
       }
     >
-      <InfoBanner>Scannez les documents reçus du chargeur ou du transporteur. Le CMR est obligatoire.</InfoBanner>
+      <InfoBanner>
+        {mission.type === 'internationale'
+          ? 'Mission internationale : CMR, carnet TIR, DUM, EUR.1. Ajoutez le certificat phytosanitaire si la marchandise est agroalimentaire.'
+          : 'Mission nationale : Bon de livraison (BL) obligatoire.'}{' '}
+        {requiredLabel}
+      </InfoBanner>
 
       <Card className="divide-y divide-slate-200 p-0">
-        {DOCUMENTS.map((doc) => (
-          <DocumentRow key={doc.id} label={doc.label} fileName={mission.documents[doc.id]} onScan={(name) => scan(doc.id, name)} />
+        {docs.map((doc) => (
+          <DocumentRow
+            key={doc.id}
+            label={doc.label}
+            fileName={mission.documents[doc.id]}
+            onScan={(name) => scan(doc.id, name)}
+          />
         ))}
       </Card>
 
       <p className="rounded-card bg-white px-4 py-3 text-center text-[15px] font-semibold text-slate-600">
-        Copie CMR conservée par le chauffeur
+        {mission.type === 'nationale' ? 'Copie BL conservée par le chauffeur' : 'Copie CMR conservée par le chauffeur'}
       </p>
     </ScreenShell>
   );

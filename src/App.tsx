@@ -5,6 +5,7 @@ import { initialMissions } from '@/data/missions';
 import { currentTime } from '@/lib/format';
 import type { Alert, Driver, Mission, ScreenId, ScreenProps } from '@/lib/types';
 import { ClosingScreen } from '@/screens/ClosingScreen';
+import { DashboardScreen } from '@/screens/DashboardScreen';
 import { CustomsScreen } from '@/screens/CustomsScreen';
 import { DeliveryArrivalScreen } from '@/screens/DeliveryArrivalScreen';
 import { DocumentsScreen } from '@/screens/DocumentsScreen';
@@ -23,7 +24,7 @@ import { TripScreen } from '@/screens/TripScreen';
 import { UnloadingScreen } from '@/screens/UnloadingScreen';
 import { VehicleCheckScreen } from '@/screens/VehicleCheckScreen';
 
-const TAB_SCREENS: ScreenId[] = ['missions', 'customs', 'profile'];
+const TAB_SCREENS: ScreenId[] = ['missions', 'dashboard', 'customs', 'profile'];
 
 interface ToastState {
   id: number;
@@ -89,6 +90,16 @@ function App() {
           driver={driver}
           unread={unread}
           onSelect={selectMission}
+          goTo={goTo}
+        />
+      );
+    }
+    if (current === 'dashboard') {
+      return (
+        <DashboardScreen
+          missions={missions}
+          driver={driver}
+          unread={unread}
           goTo={goTo}
         />
       );

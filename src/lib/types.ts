@@ -3,6 +3,7 @@ export type ScreenId =
   | 'missions'
   | 'customs'
   | 'profile'
+  | 'dashboard'
   | 'notifications'
   | 'mission-detail'
   | 'refusal'
@@ -19,6 +20,8 @@ export type ScreenId =
   | 'mission-end';
 
 export type MissionStatus = 'a_accepter' | 'acceptee' | 'en_cours' | 'livree' | 'cloturee' | 'refusee' | 'annulee';
+
+export type MissionType = 'nationale' | 'internationale';
 
 export interface Expense {
   id: string;
@@ -42,13 +45,32 @@ export interface Stop {
   window: { start: string; end: string };
   arriveePrevue: string;
   palettes: number;
+  poids: number;
   livraison: Delivery | null;
 }
 
-export type DocumentId = 'cmr' | 'facture' | 'colisage' | 'tir' | 'dum' | 'eur1';
+export type DocumentId =
+  | 'cmr'
+  | 'bl'
+  | 'facture'
+  | 'colisage'
+  | 'tir'
+  | 'dum'
+  | 'eur1'
+  | 'phytosanitaire'
+  | 'fumigation';
 export type DocumentsState = Record<DocumentId, string | null>;
 
-export type CustomsStepId = 'documents' | 'dum' | 'tir' | 'port' | 'embarquement' | 'douane_arrivee' | 'accomplie';
+export type CustomsStepId =
+  | 'documents'
+  | 'dum'
+  | 'tir'
+  | 'port'
+  | 'embarquement'
+  | 'douane_arrivee'
+  | 'sanitaire'
+  | 'phytosanitaire'
+  | 'accomplie';
 export type CustomsCheck = 'ok' | 'ko' | null;
 export type CustomsState = Record<CustomsStepId, CustomsCheck>;
 
@@ -59,6 +81,11 @@ export interface Mission {
   loadingSite: string;
   loadingAddress: string;
   goods: string;
+  type: MissionType;
+  agroalimentaire: boolean;
+  poids: number;
+  tracteur: string;
+  remorque: string;
   proposeeLe: string;
   departPrevu: string;
   delai: string;
@@ -70,6 +97,7 @@ export interface Mission {
   motif: string | null;
   kmDepart: number | null;
   kmArrivee: number | null;
+  kmParcourus: number | null;
   acceptedAt: string | null;
   departAt: string | null;
   chargeAt: string | null;
@@ -77,11 +105,26 @@ export interface Mission {
   documents: DocumentsState;
   customs: CustomsState;
   expenses: Expense[];
+  incidents: IncidentReport[];
+}
+
+export interface IncidentReport {
+  id: string;
+  type: string;
+  position: string;
+  blocking: boolean;
+  heure: string;
 }
 
 export interface Driver {
   prenom: string;
   nom: string;
+  telephone: string;
+  cin: string;
+  permis: string;
+  permisExpiry: string;
+  visa: string;
+  visaExpiry: string;
   tracteur: string;
   remorque: string;
 }

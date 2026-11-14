@@ -7,11 +7,13 @@ import { ScreenShell } from '@/components/ScreenShell';
 import type { ScreenProps } from '@/lib/types';
 
 const REASONS = [
-  'Véhicule indisponible',
-  'Temps de conduite insuffisant',
-  'Destination non couverte',
-  'Tarif insuffisant',
-  'Autre motif',
+  'Attente trop longue chez le client précédent',
+  'Panne ou entretien',
+  'Documents expirés',
+  'Temps de conduite dépassé',
+  'Créneau impossible',
+  'Tarif ou distance',
+  'Raison personnelle',
 ];
 
 export function RefusalScreen({ mission, updateMission, goTo, back, addAlert }: ScreenProps) {

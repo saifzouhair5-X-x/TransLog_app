@@ -1,4 +1,5 @@
-import { Phone, User } from 'lucide-react';
+import { Camera, CircleCheck, CircleDashed, Download, Phone, User } from 'lucide-react';
+import { useRef } from 'react';
 import { Button } from '@/components/Button';
 import { Card } from '@/components/Card';
 import { ScreenHeader } from '@/components/ScreenHeader';
@@ -7,11 +8,20 @@ import { currentStop, isGroupage } from '@/lib/missions';
 import { isWithinWindow } from '@/lib/format';
 import type { ScreenProps } from '@/lib/types';
 
-export function DeliveryArrivalScreen({ mission, updateMission, goTo, back, addAlert }: ScreenProps) {
+export function DeliveryArrivalScreen({ mission, updateMission, goTo, back, addAlert, notify }: ScreenProps) {
   const stop = currentStop(mission);
   const inWindow = isWithinWindow(new Date().toTimeString().slice(0, 5), stop.window);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const docLabel = mission.type === 'nationale' ? 'Bon de livraison (BL)' : 'Lettre de voiture (CMR)';
+  const docKey = mission.type === 'nationale' ? 'bl' : 'cmr';
+  const isScanned = mission.documents[docKey] !== null;
 
   const present = () => {
+    if (!isScanned) {
+      notify(`${docLabel} signé et cacheté obligatoire`);
+      return;
+    }
     updateMission({ etape: 'unloading' });
     goTo('unloading');
   };
@@ -20,6 +30,15 @@ export function DeliveryArrivalScreen({ mission, updateMission, goTo, back, addA
     updateMission({ echec: true, etape: 'delivery-arrival' });
     addAlert('Livraison en échec', `Destinataire absent à ${stop.ville} pour la mission #${mission.id}.`);
     goTo('missions');
+  };
+
+  const scanDoc = (fileName: string) => {
+    updateMission({ documents: { ...mission.documents, [docKey]: fileName } });
+    notify(`${docLabel} scanné`);
+  };
+
+  const downloadPdf = () => {
+    notify('Téléchargement de la CMR (PDF) en cours…');
   };
 
   return (
@@ -36,7 +55,9 @@ export function DeliveryArrivalScreen({ mission, updateMission, goTo, back, addA
           <Button variant="danger" onClick={absent}>
             Absent
           </Button>
-          <Button onClick={present}>Présent</Button>
+          <Button onClick={present} disabled={!isScanned}>
+            Présent
+          </Button>
         </div>
       }
     >
@@ -71,6 +92,51 @@ export function DeliveryArrivalScreen({ mission, updateMission, goTo, back, addA
           Vous êtes hors du créneau de livraison prévu.
         </p>
       )}
+
+      <Card className="space-y-3">
+        <p className="text-sm font-bold uppercase tracking-wide text-slate-500">
+          {docLabel} signé et cacheté
+        </p>
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex min-w-0 items-center gap-3">
+            {isScanned ? (
+              <CircleCheck size={22} className="shrink-0 text-success" />
+            ) : (
+              <CircleDashed size={22} className="shrink-0 text-danger" />
+            )}
+            <div className="min-w-0">
+              <p className="text-[16px] font-semibold leading-snug">Scan obligatoire</p>
+              <p className={isScanned ? 'text-sm text-success' : 'text-sm text-danger'}>
+                {isScanned ? `Scanné : ${mission.documents[docKey]}` : 'En attente de scan'}
+              </p>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={() => inputRef.current?.click()}
+            className="flex shrink-0 items-center gap-1.5 rounded-full bg-sun px-3 py-2 text-sm font-bold text-night transition duration-150 hover:bg-sun-hover active:scale-95"
+          >
+            <Camera size={16} />
+            Scanner
+          </button>
+          <input
+            ref={inputRef}
+            type="file"
+            accept="image/*"
+            capture="environment"
+            className="hidden"
+            onChange={(event) => {
+              const file = event.target.files?.[0];
+              if (file) scanDoc(file.name);
+              event.target.value = '';
+            }}
+          />
+        </div>
+        <Button variant="secondary" onClick={downloadPdf}>
+          <Download size={18} />
+          Télécharger la CMR (PDF)
+        </Button>
+      </Card>
     </ScreenShell>
   );
 }

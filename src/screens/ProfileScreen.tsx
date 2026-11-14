@@ -1,3 +1,4 @@
+import { TriangleAlert } from 'lucide-react';
 import { useState } from 'react';
 import { Button } from '@/components/Button';
 import { Card } from '@/components/Card';
@@ -16,6 +17,19 @@ interface ProfileScreenProps {
   notify: (message: string) => void;
 }
 
+const MS_PER_DAY = 86_400_000;
+
+function daysUntil(dateStr: string): number {
+  const target = new Date(dateStr).getTime();
+  return Math.ceil((target - Date.now()) / MS_PER_DAY);
+}
+
+function formatDate(dateStr: string): string {
+  if (!dateStr) return '—';
+  const [y, m, d] = dateStr.split('-');
+  return `${d}/${m}/${y}`;
+}
+
 export function ProfileScreen({ driver, unread, goTo, onSave, notify }: ProfileScreenProps) {
   const [draft, setDraft] = useState<Driver>(driver);
   const isDirty = (Object.keys(draft) as (keyof Driver)[]).some((key) => draft[key] !== driver[key]);
@@ -24,8 +38,14 @@ export function ProfileScreen({ driver, unread, goTo, onSave, notify }: ProfileS
   const update = (key: keyof Driver) => (event: React.ChangeEvent<HTMLInputElement>) =>
     setDraft((prev) => ({ ...prev, [key]: event.target.value }));
 
+  const permitDays = daysUntil(draft.permisExpiry);
+  const visaDays = daysUntil(draft.visaExpiry);
+  const permitExpiring = permitDays < 30;
+  const visaExpiring = visaDays < 30;
+
   const save = () => {
     onSave({
+      ...draft,
       prenom: draft.prenom.trim(),
       nom: draft.nom.trim(),
       tracteur: draft.tracteur.trim().toUpperCase(),
@@ -49,6 +69,69 @@ export function ProfileScreen({ driver, unread, goTo, onSave, notify }: ProfileS
         <p className="text-sm font-bold uppercase tracking-wide text-slate-500">Identité</p>
         <TextField label="Prénom" value={draft.prenom} onChange={update('prenom')} autoComplete="given-name" />
         <TextField label="Nom" value={draft.nom} onChange={update('nom')} autoComplete="family-name" />
+        <TextField
+          label="Numéro de téléphone"
+          value={draft.telephone}
+          onChange={update('telephone')}
+          placeholder="+212 6 12 34 56 78"
+          inputMode="tel"
+        />
+        <TextField
+          label="N° de CIN"
+          value={draft.cin}
+          onChange={update('cin')}
+          placeholder="AB123456"
+        />
+      </Card>
+
+      <Card className="space-y-4">
+        <p className="text-sm font-bold uppercase tracking-wide text-slate-500">Permis de conduire</p>
+        <TextField
+          label="N° de permis"
+          value={draft.permis}
+          onChange={update('permis')}
+          placeholder="MA-1234567"
+        />
+        <TextField
+          label="Date d'expiration"
+          value={draft.permisExpiry}
+          onChange={update('permisExpiry')}
+          placeholder="AAAA-MM-JJ"
+        />
+        <p className="text-sm text-slate-500">Expire le {formatDate(draft.permisExpiry)}</p>
+        {permitExpiring && (
+          <div className="flex items-center gap-2 rounded-card bg-sun-soft px-3 py-2.5 text-[15px] font-semibold text-[#7A5600]">
+            <TriangleAlert size={18} />
+            {permitDays < 0
+              ? 'Permis expiré !'
+              : `Permis expire dans ${permitDays} jour${permitDays > 1 ? 's' : ''}`}
+          </div>
+        )}
+      </Card>
+
+      <Card className="space-y-4">
+        <p className="text-sm font-bold uppercase tracking-wide text-slate-500">Visa / Séjour</p>
+        <TextField
+          label="N° de visa"
+          value={draft.visa}
+          onChange={update('visa')}
+          placeholder="V-2025-00000"
+        />
+        <TextField
+          label="Date d'expiration"
+          value={draft.visaExpiry}
+          onChange={update('visaExpiry')}
+          placeholder="AAAA-MM-JJ"
+        />
+        <p className="text-sm text-slate-500">Expire le {formatDate(draft.visaExpiry)}</p>
+        {visaExpiring && (
+          <div className="flex items-center gap-2 rounded-card bg-sun-soft px-3 py-2.5 text-[15px] font-semibold text-[#7A5600]">
+            <TriangleAlert size={18} />
+            {visaDays < 0
+              ? 'Visa expiré !'
+              : `Visa expire dans ${visaDays} jour${visaDays > 1 ? 's' : ''}`}
+          </div>
+        )}
       </Card>
 
       <Card className="space-y-4">
