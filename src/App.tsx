@@ -1,9 +1,9 @@
 import { useCallback, useState } from 'react';
 import { Toast } from '@/components/Toast';
-import { initialDriver } from '@/data/driver';
+import { driverForType, initialDriver } from '@/data/driver';
 import { initialMissions } from '@/data/missions';
 import { currentTime } from '@/lib/format';
-import type { Alert, Driver, Mission, ScreenId, ScreenProps } from '@/lib/types';
+import type { Alert, Driver, DriverType, Mission, ScreenId, ScreenProps } from '@/lib/types';
 import { ClosingScreen } from '@/screens/ClosingScreen';
 import { DashboardScreen } from '@/screens/DashboardScreen';
 import { CustomsScreen } from '@/screens/CustomsScreen';
@@ -34,6 +34,7 @@ interface ToastState {
 function App() {
   const [missions, setMissions] = useState<Mission[]>(initialMissions);
   const [driver, setDriver] = useState<Driver>(initialDriver);
+  const [driverType, setDriverType] = useState<DriverType>('salarie');
   const [alerts, setAlerts] = useState<Alert[]>([]);
   const [stack, setStack] = useState<ScreenId[]>(['login']);
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -82,7 +83,17 @@ function App() {
   const dismissToast = useCallback(() => setToast(null), []);
 
   const renderScreen = () => {
-    if (current === 'login') return <LoginScreen goTo={goTo} />;
+    if (current === 'login')
+      return (
+        <LoginScreen
+          goTo={goTo}
+          driverType={driverType}
+          onSelectType={(type) => {
+            setDriverType(type);
+            setDriver(driverForType(type));
+          }}
+        />
+      );
     if (current === 'missions') {
       return (
         <MissionsScreen
@@ -116,7 +127,9 @@ function App() {
       );
     }
     if (current === 'profile') {
-      return <ProfileScreen driver={driver} unread={unread} goTo={goTo} onSave={setDriver} notify={notify} />;
+      return (
+        <ProfileScreen driver={driver} unread={unread} goTo={goTo} onSave={setDriver} notify={notify} />
+      );
     }
     if (current === 'notifications') {
       return <NotificationsScreen alerts={alerts} onMarkAllRead={markAllAlertsRead} back={back} />;

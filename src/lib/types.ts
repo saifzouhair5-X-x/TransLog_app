@@ -19,6 +19,8 @@ export type ScreenId =
   | 'closing'
   | 'mission-end';
 
+export type DriverType = 'salarie' | 'independant';
+
 export type MissionStatus = 'a_accepter' | 'acceptee' | 'en_cours' | 'livree' | 'cloturee' | 'refusee' | 'annulee';
 
 export type MissionType = 'nationale' | 'internationale';
@@ -104,6 +106,8 @@ export interface Mission {
   documentsAt: string | null;
   documents: DocumentsState;
   customs: CustomsState;
+  prix: number;
+  contreProposition: number | null;
   expenses: Expense[];
   incidents: IncidentReport[];
 }
@@ -127,6 +131,8 @@ export interface Driver {
   visaExpiry: string;
   tracteur: string;
   remorque: string;
+  type: DriverType;
+  transporteur: string | null;
 }
 
 export interface Alert {

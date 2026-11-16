@@ -12,6 +12,20 @@ export function currentTime(): string {
   return new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
 }
 
+export function formatDateTime(date: Date): string {
+  const weekday = date.toLocaleDateString('fr-FR', { weekday: 'short' });
+  const dd = String(date.getDate()).padStart(2, '0');
+  const mm = String(date.getMonth() + 1).padStart(2, '0');
+  const yyyy = date.getFullYear();
+  const hh = String(date.getHours()).padStart(2, '0');
+  const min = String(date.getMinutes()).padStart(2, '0');
+  return `${weekday}. ${dd}/${mm}/${yyyy}, ${hh}:${min}`;
+}
+
+export function atTime(date: Date, hours: number, minutes = 0): Date {
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate(), hours, minutes, 0, 0);
+}
+
 function toMinutes(time: string): number {
   const [hours, minutes] = time.split(':').map(Number);
   return hours * 60 + minutes;

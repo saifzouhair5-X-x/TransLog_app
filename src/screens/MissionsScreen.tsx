@@ -1,4 +1,4 @@
-import { ArrowRight, ChevronRight, Clock, TriangleAlert } from 'lucide-react';
+import { ArrowRight, Banknote, Clock, TriangleAlert } from 'lucide-react';
 import { useState } from 'react';
 import { BottomNav } from '@/components/BottomNav';
 import { Card } from '@/components/Card';
@@ -6,6 +6,7 @@ import { NotificationBell } from '@/components/NotificationBell';
 import { ScreenHeader } from '@/components/ScreenHeader';
 import { ScreenShell } from '@/components/ScreenShell';
 import { StatusBadge } from '@/components/StatusBadge';
+import { formatMAD } from '@/lib/format';
 import { isGroupage, totalPalettes } from '@/lib/missions';
 import { cn } from '@/lib/cn';
 import type { Driver, Mission, MissionStatus, ScreenId } from '@/lib/types';
@@ -129,7 +130,10 @@ function MissionCard({ mission, index, onSelect }: { mission: Mission; index: nu
 
       <div className="mt-3 flex items-center justify-between border-t border-slate-200 pt-3 text-sm text-slate-600">
         <span>{totalPalettes(mission)} palettes · {mission.stops.length} livraison(s)</span>
-        <ChevronRight size={18} className="text-slate-400 transition group-hover:translate-x-0.5" />
+        <span className="flex items-center gap-1.5 font-bold text-night">
+          <Banknote size={16} className="text-sun" />
+          {formatMAD(mission.prix)}
+        </span>
       </div>
     </button>
   );

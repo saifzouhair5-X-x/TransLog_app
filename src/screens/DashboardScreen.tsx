@@ -1,9 +1,11 @@
 import {
+  Banknote,
   CalendarDays,
   ChartColumnBig,
   CircleCheck,
   Clock3,
   PackageX,
+  Receipt,
   Route,
   TrendingDown,
   XCircle,
@@ -13,7 +15,7 @@ import { Card } from '@/components/Card';
 import { NotificationBell } from '@/components/NotificationBell';
 import { ScreenHeader } from '@/components/ScreenHeader';
 import { ScreenShell } from '@/components/ScreenShell';
-import { formatNumber } from '@/lib/format';
+import { formatMAD, formatNumber } from '@/lib/format';
 import { cn } from '@/lib/cn';
 import type { Driver, Mission, ScreenId } from '@/lib/types';
 
@@ -49,6 +51,14 @@ export function DashboardScreen({ missions, driver, unread, goTo }: DashboardScr
   const topMotifs = [...motifCounts.entries()].sort((a, b) => b[1] - a[1]).slice(0, 3);
 
   const monthLabel = new Date().toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
+
+  const isIndependant = driver.type === 'independant';
+  const chiffreAffaires = missions
+    .filter((m) => m.statut === 'cloturee')
+    .reduce((sum, m) => sum + (isIndependant ? m.prix : 0) + (isIndependant ? 0 : 0), 0);
+  const totalFraisRemboursables = missions
+    .filter((m) => m.statut === 'cloturee')
+    .reduce((sum, m) => sum + m.expenses.reduce((s, e) => s + e.amount, 0), 0);
 
   return (
     <ScreenShell
@@ -87,6 +97,28 @@ export function DashboardScreen({ missions, driver, unread, goTo }: DashboardScr
           tone="danger"
         />
       </Card>
+
+      {isIndependant && (
+        <Card className="space-y-1 bg-night text-white">
+          <div className="flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-slate-300">
+            <Banknote size={16} />
+            Chiffre d'affaires du mois
+          </div>
+          <p className="text-[32px] font-bold leading-tight text-sun">{formatMAD(chiffreAffaires)}</p>
+          <p className="text-sm text-slate-300">{effectuees} mission(s) livrée(s) ce mois</p>
+        </Card>
+      )}
+
+      {!isIndependant && (
+        <Card className="space-y-1">
+          <div className="flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-slate-500">
+            <Receipt size={16} />
+            Frais remboursables (mois)
+          </div>
+          <p className="text-[28px] font-bold leading-tight">{formatMAD(totalFraisRemboursables)}</p>
+          <p className="text-sm text-slate-500">Péage, carburant — missions livrées</p>
+        </Card>
+      )}
 
       <div className="grid grid-cols-2 gap-3">
         <Card className="space-y-1">

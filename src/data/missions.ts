@@ -1,9 +1,16 @@
 import { emptyCustoms } from '@/data/customs';
 import { emptyDocuments } from '@/data/documents';
+import { addDays, delaiText, fmt, rangeForPasse, rangeForPlanifiee } from '@/lib/dates';
 import type { Mission } from '@/lib/types';
 
-export const initialMissions: Mission[] = [
-  {
+const today = new Date();
+
+function buildMissions(): Mission[] {
+  const missions: Mission[] = [];
+
+  // --- À planifier (1 à 7 prochains jours) ---
+  const m1024 = rangeForPlanifiee(today, 2, 8, 12);
+  missions.push({
     id: '1024',
     origin: 'Casablanca',
     destination: 'Rabat',
@@ -15,9 +22,9 @@ export const initialMissions: Mission[] = [
     poids: 8400,
     tracteur: '12345-A-6',
     remorque: '54321-B-7',
-    proposeeLe: '03/11/2026 17:45',
-    departPrevu: '05/11/2026 08:00',
-    delai: 'Livraison avant 14:00 le 05/11/2026',
+    proposeeLe: fmt(m1024.proposee),
+    departPrevu: fmt(m1024.depart),
+    delai: delaiText(m1024.arrivee),
     localisation: 'Entrepôt Atlas Logistique, Casablanca',
     stops: [
       {
@@ -28,7 +35,7 @@ export const initialMissions: Mission[] = [
         recipient: 'Mme Alaoui, réception',
         recipientPhone: '+212 5 37 00 12 34',
         window: { start: '12:30', end: '14:00' },
-        arriveePrevue: '05/11/2026 12:30',
+        arriveePrevue: fmt(m1024.arrivee),
         palettes: 12,
         poids: 8400,
         livraison: null,
@@ -47,13 +54,17 @@ export const initialMissions: Mission[] = [
     documentsAt: null,
     documents: emptyDocuments(),
     customs: emptyCustoms(),
+    prix: 3500,
+    contreProposition: null,
     expenses: [
       { id: 'peage-1024', label: 'Péage', amount: 46 },
       { id: 'carburant-1024', label: 'Carburant', amount: 520 },
     ],
     incidents: [],
-  },
-  {
+  });
+
+  const m1025 = rangeForPlanifiee(today, 3, 6, 14);
+  missions.push({
     id: '1025',
     origin: 'Casablanca',
     destination: 'Marrakech',
@@ -65,9 +76,9 @@ export const initialMissions: Mission[] = [
     poids: 6200,
     tracteur: '12345-A-6',
     remorque: '54321-B-7',
-    proposeeLe: '03/11/2026 18:10',
-    departPrevu: '05/11/2026 06:30',
-    delai: 'Dernier arrêt avant le 06/11/2026 12:00',
+    proposeeLe: fmt(m1025.proposee),
+    departPrevu: fmt(m1025.depart),
+    delai: `Dernier arrêt avant ${fmt(addDays(m1025.arrivee, 1))}`,
     localisation: 'Dépôt Bouskoura, Casablanca',
     stops: [
       {
@@ -78,7 +89,7 @@ export const initialMissions: Mission[] = [
         recipient: 'Mme Bennani, magasinier',
         recipientPhone: '+212 5 37 00 56 78',
         window: { start: '14:00', end: '16:00' },
-        arriveePrevue: '05/11/2026 14:00',
+        arriveePrevue: fmt(m1025.arrivee),
         palettes: 5,
         poids: 3100,
         livraison: null,
@@ -91,7 +102,7 @@ export const initialMissions: Mission[] = [
         recipient: 'M. Tazi, réception',
         recipientPhone: '+212 5 24 00 90 12',
         window: { start: '09:00', end: '12:00' },
-        arriveePrevue: '06/11/2026 09:00',
+        arriveePrevue: fmt(addDays(m1025.arrivee, 1)),
         palettes: 3,
         poids: 3100,
         livraison: null,
@@ -110,10 +121,14 @@ export const initialMissions: Mission[] = [
     documentsAt: null,
     documents: emptyDocuments(),
     customs: emptyCustoms(),
+    prix: 5200,
+    contreProposition: null,
     expenses: [],
     incidents: [],
-  },
-  {
+  });
+
+  const m1026 = rangeForPlanifiee(today, 5, 5, 9);
+  missions.push({
     id: '1026',
     origin: 'Tanger',
     destination: 'Fès',
@@ -125,9 +140,9 @@ export const initialMissions: Mission[] = [
     poids: 12500,
     tracteur: '12345-A-6',
     remorque: '54321-B-7',
-    proposeeLe: '04/11/2026 08:20',
-    departPrevu: '06/11/2026 05:00',
-    delai: 'Livraison avant 11:00 le 06/11/2026',
+    proposeeLe: fmt(m1026.proposee),
+    departPrevu: fmt(m1026.depart),
+    delai: delaiText(m1026.arrivee),
     localisation: 'Port Tanger Med, Tanger',
     stops: [
       {
@@ -138,7 +153,7 @@ export const initialMissions: Mission[] = [
         recipient: 'Mme Idrissi, réception',
         recipientPhone: '+212 5 35 00 90 12',
         window: { start: '09:00', end: '11:00' },
-        arriveePrevue: '06/11/2026 09:00',
+        arriveePrevue: fmt(m1026.arrivee),
         palettes: 6,
         poids: 12500,
         livraison: null,
@@ -157,11 +172,15 @@ export const initialMissions: Mission[] = [
     documentsAt: null,
     documents: emptyDocuments(),
     customs: emptyCustoms(),
+    prix: 6800,
+    contreProposition: null,
     expenses: [],
     incidents: [],
-  },
-  // --- Dashboard data: completed missions this month ---
-  {
+  });
+
+  // --- Effectuées (1 à 10 derniers jours) ---
+  const m1018 = rangeForPasse(today, 5, 6, 15);
+  missions.push({
     id: '1018',
     origin: 'Casablanca',
     destination: 'Agadir',
@@ -173,9 +192,9 @@ export const initialMissions: Mission[] = [
     poids: 5200,
     tracteur: '12345-A-6',
     remorque: '54321-B-7',
-    proposeeLe: '28/10/2026 14:00',
-    departPrevu: '29/10/2026 06:00',
-    delai: 'Livraison avant 18:00 le 29/10/2026',
+    proposeeLe: fmt(m1018.proposee),
+    departPrevu: fmt(m1018.depart),
+    delai: delaiText(m1018.arrivee),
     localisation: 'Agadir',
     stops: [
       {
@@ -186,7 +205,7 @@ export const initialMissions: Mission[] = [
         recipient: 'M. Ouaali, réception',
         recipientPhone: '+212 5 28 00 11 22',
         window: { start: '15:00', end: '18:00' },
-        arriveePrevue: '29/10/2026 15:00',
+        arriveePrevue: fmt(m1018.arrivee),
         palettes: 8,
         poids: 5200,
         livraison: { heure: '16:20', reserve: false },
@@ -199,19 +218,23 @@ export const initialMissions: Mission[] = [
     kmDepart: 182100,
     kmArrivee: 183950,
     kmParcourus: 1850,
-    acceptedAt: '28/10/2026 14:30',
+    acceptedAt: fmt(addDays(m1018.proposee, 0)),
     departAt: '06:15',
     chargeAt: '07:45',
     documentsAt: '08:10',
     documents: emptyDocuments(),
     customs: emptyCustoms(),
+    prix: 7200,
+    contreProposition: null,
     expenses: [
       { id: 'peage-1018', label: 'Péage', amount: 120 },
       { id: 'carburant-1018', label: 'Carburant', amount: 850 },
     ],
     incidents: [],
-  },
-  {
+  });
+
+  const m1019 = rangeForPasse(today, 8, 4, 17);
+  missions.push({
     id: '1019',
     origin: 'Tanger',
     destination: 'Marrakech',
@@ -223,9 +246,9 @@ export const initialMissions: Mission[] = [
     poids: 7800,
     tracteur: '12345-A-6',
     remorque: '54321-B-7',
-    proposeeLe: '25/10/2026 09:00',
-    departPrevu: '26/10/2026 04:30',
-    delai: 'Livraison avant 20:00 le 26/10/2026',
+    proposeeLe: fmt(m1019.proposee),
+    departPrevu: fmt(m1019.depart),
+    delai: delaiText(m1019.arrivee),
     localisation: 'Marrakech',
     stops: [
       {
@@ -236,7 +259,7 @@ export const initialMissions: Mission[] = [
         recipient: 'Mme Chraibi, réception',
         recipientPhone: '+212 5 24 00 33 44',
         window: { start: '17:00', end: '20:00' },
-        arriveePrevue: '26/10/2026 17:00',
+        arriveePrevue: fmt(m1019.arrivee),
         palettes: 10,
         poids: 7800,
         livraison: { heure: '18:05', reserve: false },
@@ -249,12 +272,14 @@ export const initialMissions: Mission[] = [
     kmDepart: 180000,
     kmArrivee: 182100,
     kmParcourus: 2100,
-    acceptedAt: '25/10/2026 09:30',
+    acceptedAt: fmt(addDays(m1019.proposee, 0)),
     departAt: '04:45',
     chargeAt: '06:00',
     documentsAt: '06:30',
     documents: emptyDocuments(),
     customs: emptyCustoms(),
+    prix: 9100,
+    contreProposition: null,
     expenses: [
       { id: 'peage-1019', label: 'Péage', amount: 80 },
       { id: 'carburant-1019', label: 'Carburant', amount: 680 },
@@ -262,8 +287,10 @@ export const initialMissions: Mission[] = [
     incidents: [
       { id: 'inc-1019-1', type: 'Retard de trafic', position: 'Autoroute A2, km 140', blocking: false, heure: '12:30' },
     ],
-  },
-  {
+  });
+
+  const m1020 = rangeForPasse(today, 3, 7, 13);
+  missions.push({
     id: '1020',
     origin: 'Casablanca',
     destination: 'Meknès',
@@ -275,9 +302,9 @@ export const initialMissions: Mission[] = [
     poids: 9600,
     tracteur: '12345-A-6',
     remorque: '54321-B-7',
-    proposeeLe: '20/10/2026 11:00',
-    departPrevu: '21/10/2026 07:00',
-    delai: 'Livraison avant 16:00 le 21/10/2026',
+    proposeeLe: fmt(m1020.proposee),
+    departPrevu: fmt(m1020.depart),
+    delai: delaiText(m1020.arrivee),
     localisation: 'Meknès',
     stops: [
       {
@@ -288,7 +315,7 @@ export const initialMissions: Mission[] = [
         recipient: 'M. Sebti, réception',
         recipientPhone: '+212 5 35 00 77 88',
         window: { start: '13:00', end: '16:00' },
-        arriveePrevue: '21/10/2026 13:00',
+        arriveePrevue: fmt(m1020.arrivee),
         palettes: 14,
         poids: 9600,
         livraison: { heure: '14:10', reserve: false },
@@ -301,20 +328,24 @@ export const initialMissions: Mission[] = [
     kmDepart: 178300,
     kmArrivee: 180000,
     kmParcourus: 1700,
-    acceptedAt: '20/10/2026 11:20',
+    acceptedAt: fmt(addDays(m1020.proposee, 0)),
     departAt: '07:10',
     chargeAt: '08:30',
     documentsAt: '09:00',
     documents: emptyDocuments(),
     customs: emptyCustoms(),
+    prix: 4800,
+    contreProposition: null,
     expenses: [
       { id: 'peage-1020', label: 'Péage', amount: 60 },
       { id: 'carburant-1020', label: 'Carburant', amount: 580 },
     ],
     incidents: [],
-  },
-  // --- Cancelled missions for dashboard ---
-  {
+  });
+
+  // --- Annulées (1 à 10 derniers jours) ---
+  const m1015 = rangeForPasse(today, 2, 6, 12);
+  missions.push({
     id: '1015',
     origin: 'Casablanca',
     destination: 'Tanger',
@@ -326,9 +357,9 @@ export const initialMissions: Mission[] = [
     poids: 4500,
     tracteur: '12345-A-6',
     remorque: '54321-B-7',
-    proposeeLe: '18/10/2026 10:00',
-    departPrevu: '19/10/2026 06:00',
-    delai: 'Livraison avant 14:00 le 19/10/2026',
+    proposeeLe: fmt(m1015.proposee),
+    departPrevu: fmt(m1015.depart),
+    delai: delaiText(m1015.arrivee),
     localisation: 'Casablanca',
     stops: [
       {
@@ -339,7 +370,7 @@ export const initialMissions: Mission[] = [
         recipient: 'M. El Fassi, réception',
         recipientPhone: '+212 5 39 00 55 66',
         window: { start: '12:00', end: '14:00' },
-        arriveePrevue: '19/10/2026 12:00',
+        arriveePrevue: fmt(m1015.arrivee),
         palettes: 7,
         poids: 4500,
         livraison: null,
@@ -352,16 +383,20 @@ export const initialMissions: Mission[] = [
     kmDepart: null,
     kmArrivee: null,
     kmParcourus: null,
-    acceptedAt: '18/10/2026 10:15',
+    acceptedAt: fmt(addDays(m1015.proposee, 0)),
     departAt: null,
     chargeAt: null,
     documentsAt: null,
     documents: emptyDocuments(),
     customs: emptyCustoms(),
+    prix: 4200,
+    contreProposition: null,
     expenses: [],
     incidents: [],
-  },
-  {
+  });
+
+  const m1016 = rangeForPasse(today, 6, 4, 18);
+  missions.push({
     id: '1016',
     origin: 'Rabat',
     destination: 'Oujda',
@@ -373,9 +408,9 @@ export const initialMissions: Mission[] = [
     poids: 11200,
     tracteur: '12345-A-6',
     remorque: '54321-B-7',
-    proposeeLe: '15/10/2026 16:00',
-    departPrevu: '16/10/2026 04:00',
-    delai: 'Livraison avant 22:00 le 16/10/2026',
+    proposeeLe: fmt(m1016.proposee),
+    departPrevu: fmt(m1016.depart),
+    delai: delaiText(m1016.arrivee),
     localisation: 'Rabat',
     stops: [
       {
@@ -386,7 +421,7 @@ export const initialMissions: Mission[] = [
         recipient: 'M. Berrada, réception',
         recipientPhone: '+212 5 36 00 22 33',
         window: { start: '18:00', end: '22:00' },
-        arriveePrevue: '16/10/2026 18:00',
+        arriveePrevue: fmt(m1016.arrivee),
         palettes: 9,
         poids: 11200,
         livraison: null,
@@ -399,16 +434,20 @@ export const initialMissions: Mission[] = [
     kmDepart: null,
     kmArrivee: null,
     kmParcourus: null,
-    acceptedAt: '15/10/2026 16:30',
+    acceptedAt: fmt(addDays(m1016.proposee, 0)),
     departAt: null,
     chargeAt: null,
     documentsAt: null,
     documents: emptyDocuments(),
     customs: emptyCustoms(),
+    prix: 11500,
+    contreProposition: null,
     expenses: [],
     incidents: [],
-  },
-  {
+  });
+
+  const m1017 = rangeForPasse(today, 9, 7, 13);
+  missions.push({
     id: '1017',
     origin: 'Casablanca',
     destination: 'Fès',
@@ -420,9 +459,9 @@ export const initialMissions: Mission[] = [
     poids: 3800,
     tracteur: '12345-A-6',
     remorque: '54321-B-7',
-    proposeeLe: '12/10/2026 09:30',
-    departPrevu: '13/10/2026 07:00',
-    delai: 'Livraison avant 15:00 le 13/10/2026',
+    proposeeLe: fmt(m1017.proposee),
+    departPrevu: fmt(m1017.depart),
+    delai: delaiText(m1017.arrivee),
     localisation: 'Casablanca',
     stops: [
       {
@@ -433,7 +472,7 @@ export const initialMissions: Mission[] = [
         recipient: 'Mme Lamrani, réception',
         recipientPhone: '+212 5 35 00 44 55',
         window: { start: '13:00', end: '15:00' },
-        arriveePrevue: '13/10/2026 13:00',
+        arriveePrevue: fmt(m1017.arrivee),
         palettes: 4,
         poids: 3800,
         livraison: null,
@@ -446,16 +485,20 @@ export const initialMissions: Mission[] = [
     kmDepart: null,
     kmArrivee: null,
     kmParcourus: null,
-    acceptedAt: '12/10/2026 10:00',
+    acceptedAt: fmt(addDays(m1017.proposee, 0)),
     departAt: null,
     chargeAt: null,
     documentsAt: null,
     documents: emptyDocuments(),
     customs: emptyCustoms(),
+    prix: 3900,
+    contreProposition: null,
     expenses: [],
     incidents: [],
-  },
-  {
+  });
+
+  const m1021 = rangeForPasse(today, 10, 5, 14);
+  missions.push({
     id: '1021',
     origin: 'Marrakech',
     destination: 'Casablanca',
@@ -467,9 +510,9 @@ export const initialMissions: Mission[] = [
     poids: 14000,
     tracteur: '12345-A-6',
     remorque: '54321-B-7',
-    proposeeLe: '08/10/2026 12:00',
-    departPrevu: '09/10/2026 05:00',
-    delai: 'Livraison avant 17:00 le 09/10/2026',
+    proposeeLe: fmt(m1021.proposee),
+    departPrevu: fmt(m1021.depart),
+    delai: delaiText(m1021.arrivee),
     localisation: 'Marrakech',
     stops: [
       {
@@ -480,7 +523,7 @@ export const initialMissions: Mission[] = [
         recipient: 'M. Kabbaj, réception',
         recipientPhone: '+212 5 22 00 66 77',
         window: { start: '14:00', end: '17:00' },
-        arriveePrevue: '09/10/2026 14:00',
+        arriveePrevue: fmt(m1021.arrivee),
         palettes: 11,
         poids: 14000,
         livraison: null,
@@ -493,13 +536,19 @@ export const initialMissions: Mission[] = [
     kmDepart: null,
     kmArrivee: null,
     kmParcourus: null,
-    acceptedAt: '08/10/2026 12:20',
+    acceptedAt: fmt(addDays(m1021.proposee, 0)),
     departAt: null,
     chargeAt: null,
     documentsAt: null,
     documents: emptyDocuments(),
     customs: emptyCustoms(),
+    prix: 5600,
+    contreProposition: null,
     expenses: [],
     incidents: [],
-  },
-];
+  });
+
+  return missions;
+}
+
+export const initialMissions: Mission[] = buildMissions();

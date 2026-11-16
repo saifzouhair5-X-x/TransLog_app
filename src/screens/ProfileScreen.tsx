@@ -7,6 +7,7 @@ import { BottomNav } from '@/components/BottomNav';
 import { ScreenHeader } from '@/components/ScreenHeader';
 import { ScreenShell } from '@/components/ScreenShell';
 import { TextField } from '@/components/TextField';
+import { cn } from '@/lib/cn';
 import type { Driver, ScreenId } from '@/lib/types';
 
 interface ProfileScreenProps {
@@ -65,6 +66,30 @@ export function ProfileScreen({ driver, unread, goTo, onSave, notify }: ProfileS
       }
       footer={<BottomNav active="profile" onSelect={goTo} />}
     >
+      <Card className="space-y-3">
+        <div className="flex items-center justify-between gap-3">
+          <p className="text-sm font-bold uppercase tracking-wide text-slate-500">Type de chauffeur</p>
+          <span
+            className={cn(
+              'inline-flex items-center rounded-full px-3 py-1 text-sm font-semibold ring-1 ring-inset',
+              driver.type === 'salarie'
+                ? 'bg-slate-100 text-slate-700 ring-slate-300'
+                : 'bg-sun-soft text-[#7A5600] ring-sun/50'
+            )}
+          >
+            {driver.type === 'salarie' ? 'Salarié' : 'Indépendant'}
+          </span>
+        </div>
+        {driver.type === 'salarie' && driver.transporteur && (
+          <p className="text-[15px] text-slate-600">
+            Employé par <span className="font-semibold text-night">{driver.transporteur}</span>
+          </p>
+        )}
+        {driver.type === 'independant' && (
+          <p className="text-[15px] text-slate-600">Propriétaire de son camion, missions au choix.</p>
+        )}
+      </Card>
+
       <Card className="space-y-4">
         <p className="text-sm font-bold uppercase tracking-wide text-slate-500">Identité</p>
         <TextField label="Prénom" value={draft.prenom} onChange={update('prenom')} autoComplete="given-name" />

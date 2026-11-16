@@ -1,11 +1,12 @@
-import { Check, Circle, CircleDot, MapPin, Truck, X } from 'lucide-react';
+import { Banknote, Check, Circle, CircleDot, HandCoins, MapPin, Truck, X } from 'lucide-react';
+import { useState } from 'react';
 import { Button } from '@/components/Button';
 import { Card } from '@/components/Card';
 import { ScreenHeader } from '@/components/ScreenHeader';
 import { ScreenShell } from '@/components/ScreenShell';
 import { StatusBadge } from '@/components/StatusBadge';
 import { cn } from '@/lib/cn';
-import { currentTime } from '@/lib/format';
+import { currentTime, formatMAD } from '@/lib/format';
 import { isGroupage, totalPalettes } from '@/lib/missions';
 import { buildTimeline, type TimelineState } from '@/lib/timeline';
 import type { Driver, ScreenProps } from '@/lib/types';
@@ -14,10 +15,16 @@ interface MissionDetailScreenProps extends ScreenProps {
   driver: Driver;
 }
 
-export function MissionDetailScreen({ mission, updateMission, goTo, back, addAlert, driver }: MissionDetailScreenProps) {
+export function MissionDetailScreen({ mission, updateMission, goTo, back, addAlert, notify, driver }: MissionDetailScreenProps) {
   const lastStop = mission.stops[mission.stops.length - 1];
   const timeline = buildTimeline(mission);
   const pending = mission.statut === 'a_accepter';
+  const isIndependant = driver.type === 'independant';
+
+  const [contreMontant, setContreMontant] = useState<string>(
+    mission.contreProposition !== null ? String(mission.contreProposition) : ''
+  );
+  const [showContre, setShowContre] = useState(false);
 
   const accept = () => {
     updateMission({ statut: 'acceptee', acceptedAt: currentTime(), etape: 'vehicle-check' });
@@ -25,16 +32,51 @@ export function MissionDetailScreen({ mission, updateMission, goTo, back, addAle
     goTo('vehicle-check');
   };
 
+  const sendContre = () => {
+    const montant = Number(contreMontant);
+    if (!montant || montant <= 0) return;
+    updateMission({ contreProposition: montant });
+    addAlert('Contre-proposition envoyée', `Mission #${mission.id} : vous proposez ${formatMAD(montant)} (prix initial ${formatMAD(mission.prix)}).`);
+    notify('Contre-proposition envoyée');
+  };
+
+  const totalFrais = mission.expenses.reduce((sum, e) => sum + e.amount, 0);
+
   return (
     <ScreenShell
       header={<ScreenHeader title={`Mission #${mission.id}`} subtitle={`${mission.origin} → ${mission.destination}`} onBack={back} />}
       footer={
         pending ? (
-          <div className="grid grid-cols-2 gap-3">
-            <Button variant="danger" onClick={() => goTo('refusal')}>
-              Refuser
-            </Button>
-            <Button onClick={accept}>Accepter</Button>
+          <div className="space-y-3">
+            {isIndependant && showContre && (
+              <div className="flex items-center gap-2">
+                <input
+                  type="number"
+                  inputMode="numeric"
+                  value={contreMontant}
+                  onChange={(event) => setContreMontant(event.target.value)}
+                  placeholder={String(mission.prix)}
+                  className="min-w-0 flex-1 rounded-[10px] border border-slate-300 bg-white px-3 py-3 text-[17px] font-semibold outline-none transition focus:border-night focus:ring-2 focus:ring-night/20"
+                />
+                <span className="shrink-0 text-sm font-semibold text-slate-500">MAD</span>
+                <Button onClick={sendContre} disabled={!contreMontant || Number(contreMontant) <= 0} className="shrink-0">
+                  Proposer ce prix
+                </Button>
+              </div>
+            )}
+            <div className="grid grid-cols-2 gap-3">
+              <Button variant="danger" onClick={() => goTo('refusal')}>
+                Refuser
+              </Button>
+              {isIndependant && !showContre ? (
+                <Button variant="secondary" onClick={() => setShowContre(true)}>
+                  <HandCoins size={18} />
+                  Contre-proposition
+                </Button>
+              ) : (
+                <Button onClick={accept}>Accepter</Button>
+              )}
+            </div>
           </div>
         ) : undefined
       }
@@ -45,6 +87,29 @@ export function MissionDetailScreen({ mission, updateMission, goTo, back, addAle
           <span className="rounded-full bg-slate-200 px-3 py-1 text-sm font-semibold text-slate-700">Groupage</span>
         )}
       </div>
+
+      <Card className="space-y-2">
+        <p className="flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-slate-500">
+          <Banknote size={16} />
+          Prix de la mission
+        </p>
+        <p className="text-[28px] font-bold leading-tight text-night">{formatMAD(mission.prix)}</p>
+        {mission.contreProposition !== null && (
+          <p className="text-sm font-semibold text-sun">
+            Votre contre-proposition : {formatMAD(mission.contreProposition)}
+          </p>
+        )}
+        {!isIndependant && (
+          <p className="text-sm text-slate-500">
+            Frais remboursables : {formatMAD(totalFrais)}
+            {mission.expenses.length > 0 && (
+              <span className="ml-1 text-slate-400">
+                ({mission.expenses.map((e) => `${e.label} ${formatMAD(e.amount)}`).join(' · ')})
+              </span>
+            )}
+          </p>
+        )}
+      </Card>
 
       <Card className="divide-y divide-slate-200 p-0">
         <InfoRow label="Départ prévu" value={mission.departPrevu} />
