@@ -71,87 +71,87 @@ export function DashboardScreen({ missions, driver, unread, goTo }: DashboardScr
       }
       footer={<BottomNav active="dashboard" onSelect={goTo} />}
     >
-      <Card className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-2 gap-3">
         <StatBox
-          icon={<CalendarDays size={20} />}
+          icon={<CalendarDays size={17} />}
           label="Planifiées"
           value={planifiees}
           tone="neutral"
         />
         <StatBox
-          icon={<Clock3 size={20} />}
+          icon={<Clock3 size={17} />}
           label="En cours"
           value={enCours}
           tone="active"
         />
         <StatBox
-          icon={<CircleCheck size={20} />}
+          icon={<CircleCheck size={17} />}
           label="Effectuées"
           value={effectuees}
           tone="success"
         />
         <StatBox
-          icon={<XCircle size={20} />}
+          icon={<XCircle size={17} />}
           label="Annulées"
           value={annulees}
           tone="danger"
         />
-      </Card>
+      </div>
 
       {isIndependant && (
-        <Card className="space-y-1 bg-night text-white">
-          <div className="flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-slate-300">
+        <Card className="space-y-1 border-night bg-night text-white">
+          <div className="flex items-center gap-2 text-[12px] font-semibold uppercase tracking-[0.06em] text-slate-400">
             <Banknote size={16} />
             Chiffre d'affaires du mois
           </div>
-          <p className="text-[32px] font-bold leading-tight text-sun">{formatMAD(chiffreAffaires)}</p>
-          <p className="text-sm text-slate-300">{effectuees} mission(s) livrée(s) ce mois</p>
+          <p className="text-[32px] font-semibold leading-tight tracking-[-0.03em] tabular-nums text-white">{formatMAD(chiffreAffaires)}</p>
+          <p className="text-sm text-slate-400">{effectuees} mission(s) livrée(s) ce mois</p>
         </Card>
       )}
 
       {!isIndependant && (
         <Card className="space-y-1">
-          <div className="flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-slate-500">
+          <div className="flex items-center gap-2 text-[12px] font-semibold uppercase tracking-[0.06em] text-slate-500">
             <Receipt size={16} />
             Frais remboursables (mois)
           </div>
-          <p className="text-[28px] font-bold leading-tight">{formatMAD(totalFraisRemboursables)}</p>
+          <p className="text-[24px] font-semibold leading-tight tracking-[-0.03em] tabular-nums">{formatMAD(totalFraisRemboursables)}</p>
           <p className="text-sm text-slate-500">Péage, carburant — missions livrées</p>
         </Card>
       )}
 
       <div className="grid grid-cols-2 gap-3">
         <Card className="space-y-1">
-          <div className="flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-slate-500">
+          <div className="flex items-center gap-2 text-[12px] font-semibold uppercase tracking-[0.06em] text-slate-500">
             <Route size={16} />
             km parcourus
           </div>
-          <p className="text-[28px] font-bold leading-tight">{formatNumber(kmParcourus)}</p>
+          <p className="text-[24px] font-semibold leading-tight tracking-[-0.03em] tabular-nums">{formatNumber(kmParcourus)}</p>
           <p className="text-sm text-slate-500">kilomètres ce mois</p>
         </Card>
 
         <Card className="space-y-1">
-          <div className="flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-slate-500">
+          <div className="flex items-center gap-2 text-[12px] font-semibold uppercase tracking-[0.06em] text-slate-500">
             <PackageX size={16} />
             Incidents
           </div>
-          <p className="text-[28px] font-bold leading-tight">{incidentsCount}</p>
+          <p className="text-[24px] font-semibold leading-tight tracking-[-0.03em] tabular-nums">{incidentsCount}</p>
           <p className="text-sm text-slate-500">déclarés ce mois</p>
         </Card>
       </div>
 
       <Card className="space-y-3">
-        <div className="flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-slate-500">
+        <div className="flex items-center gap-2 text-[12px] font-semibold uppercase tracking-[0.06em] text-slate-500">
           <TrendingDown size={16} />
           Taux d'annulation
         </div>
         <div className="flex items-end gap-3">
-          <p className="text-[32px] font-bold leading-none text-danger">{tauxAnnulation}%</p>
+          <p className="text-[32px] font-semibold leading-none text-danger">{tauxAnnulation}%</p>
           <p className="pb-1 text-sm text-slate-500">
             {annulees} / {total} missions
           </p>
         </div>
-        <div className="h-3 overflow-hidden rounded-full bg-slate-200">
+        <div className="h-2 overflow-hidden rounded-full bg-slate-100">
           <div
             className="h-full rounded-full bg-danger transition-all duration-500"
             style={{ width: `${tauxAnnulation}%` }}
@@ -160,7 +160,7 @@ export function DashboardScreen({ missions, driver, unread, goTo }: DashboardScr
       </Card>
 
       <Card className="space-y-3">
-        <div className="flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-slate-500">
+        <div className="flex items-center gap-2 text-[12px] font-semibold uppercase tracking-[0.06em] text-slate-500">
           <ChartColumnBig size={16} />
           Motifs d'annulation les plus fréquents
         </div>
@@ -171,12 +171,12 @@ export function DashboardScreen({ missions, driver, unread, goTo }: DashboardScr
             {topMotifs.map(([motif, count], index) => (
               <li key={motif} className="flex items-center justify-between gap-3">
                 <div className="flex items-center gap-2">
-                  <span className="flex h-6 w-6 items-center justify-center rounded-full bg-slate-200 text-xs font-bold text-slate-700">
+                  <span className="flex h-6 w-6 items-center justify-center rounded-full bg-slate-200 text-xs font-semibold text-slate-700">
                     {index + 1}
                   </span>
                   <span className="text-[15px] font-semibold">{motif}</span>
                 </div>
-                <span className="shrink-0 rounded-full bg-danger-soft px-2.5 py-0.5 text-sm font-bold text-danger">
+                <span className="shrink-0 rounded-full bg-danger-soft px-2.5 py-0.5 text-sm font-semibold text-danger">
                   {count}x
                 </span>
               </li>
@@ -200,16 +200,18 @@ function StatBox({
   tone: 'neutral' | 'active' | 'success' | 'danger';
 }) {
   const toneClasses = {
-    neutral: 'bg-slate-100 text-slate-700',
-    active: 'bg-night text-white',
+    neutral: 'bg-slate-100 text-slate-600',
+    active: 'bg-sun-soft text-sun',
     success: 'bg-success-soft text-success',
     danger: 'bg-danger-soft text-danger',
   };
   return (
-    <div className={cn('flex flex-col items-center gap-1 rounded-card px-3 py-4', toneClasses[tone])}>
-      {icon}
-      <p className="text-[26px] font-bold leading-none">{value}</p>
-      <p className="text-[13px] font-semibold opacity-80">{label}</p>
+    <div className="flex flex-col gap-3 rounded-xl border border-line bg-white p-3.5">
+      <span className={cn('flex h-8 w-8 items-center justify-center rounded-lg', toneClasses[tone])}>{icon}</span>
+      <div>
+        <p className="text-[24px] font-semibold leading-none tracking-[-0.03em] tabular-nums text-night">{value}</p>
+        <p className="mt-1 text-[13px] font-medium text-slate-500">{label}</p>
+      </div>
     </div>
   );
 }

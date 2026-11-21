@@ -43,7 +43,7 @@ export function CustomsScreen({ missions, unread, goTo, onUpdate, onAddAlert }: 
     >
       {customsMissions.length === 0 && (
         <Card className="py-10 text-center">
-          <p className="text-lg font-bold">Aucune mission en douane</p>
+          <p className="text-lg font-semibold">Aucune mission en douane</p>
           <p className="mt-1 text-[15px] text-slate-500">Les missions acceptées apparaîtront ici.</p>
         </Card>
       )}
@@ -55,7 +55,7 @@ export function CustomsScreen({ missions, unread, goTo, onUpdate, onAddAlert }: 
             <div className="flex items-center justify-between gap-3">
               <div className="min-w-0">
                 <p className="text-sm font-semibold text-slate-500">Mission #{mission.id}</p>
-                <p className="truncate text-[18px] font-bold">
+                <p className="truncate text-[18px] font-semibold">
                   {mission.origin} → {mission.destination}
                 </p>
               </div>
@@ -64,7 +64,7 @@ export function CustomsScreen({ missions, unread, goTo, onUpdate, onAddAlert }: 
               </span>
             </div>
 
-            <ul className="divide-y divide-slate-200">
+            <ul className="divide-y divide-line">
               {CUSTOMS_STEPS.map((step) => {
                 const value = mission.customs[step.id];
                 return (

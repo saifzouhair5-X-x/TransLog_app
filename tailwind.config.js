@@ -4,30 +4,39 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Barlow', 'system-ui', 'sans-serif'],
+        sans: ['Inter', 'system-ui', '-apple-system', 'Segoe UI', 'sans-serif'],
       },
       colors: {
+        // Encre : textes et surfaces sombres
         night: {
-          DEFAULT: '#1F2A37',
-          soft: '#2B3847',
+          DEFAULT: '#0F172A',
+          soft: '#1E293B',
         },
+        // Couleur d'action principale (bleu professionnel)
         sun: {
-          DEFAULT: '#F2A900',
-          hover: '#DC9900',
-          soft: '#FDF4D6',
+          DEFAULT: '#1D4ED8',
+          hover: '#1E40AF',
+          soft: '#EEF3FF',
         },
-        canvas: '#F5F7F9',
+        // Avertissements (à accepter, expiration proche)
+        warn: {
+          DEFAULT: '#D97706',
+          soft: '#FEF6E7',
+          ink: '#92400E',
+        },
+        canvas: '#F4F6F8',
+        line: '#E3E8EF',
         success: {
-          DEFAULT: '#1E6B3A',
-          soft: '#E4F1E8',
+          DEFAULT: '#15803D',
+          soft: '#EAF7EF',
         },
         danger: {
-          DEFAULT: '#B3261E',
-          soft: '#FBE9E7',
+          DEFAULT: '#B91C1C',
+          soft: '#FDECEC',
         },
       },
       borderRadius: {
-        card: '12px',
+        card: '14px',
       },
       keyframes: {
         'toast-in': {
@@ -49,10 +58,14 @@ export default {
         'pop-in': 'pop-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both',
       },
       height: {
-        btn: '58px',
+        btn: '54px',
       },
       minHeight: {
-        btn: '58px',
+        btn: '54px',
+      },
+      boxShadow: {
+        card: '0 1px 2px rgba(15, 23, 42, 0.04), 0 1px 3px rgba(15, 23, 42, 0.04)',
+        raised: '0 8px 24px -12px rgba(15, 23, 42, 0.25)',
       },
     },
   },

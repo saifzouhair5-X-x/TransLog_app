@@ -68,13 +68,13 @@ export function ProfileScreen({ driver, unread, goTo, onSave, notify }: ProfileS
     >
       <Card className="space-y-3">
         <div className="flex items-center justify-between gap-3">
-          <p className="text-sm font-bold uppercase tracking-wide text-slate-500">Type de chauffeur</p>
+          <p className="text-[12px] font-semibold uppercase tracking-[0.06em] text-slate-500">Type de chauffeur</p>
           <span
             className={cn(
               'inline-flex items-center rounded-full px-3 py-1 text-sm font-semibold ring-1 ring-inset',
               driver.type === 'salarie'
                 ? 'bg-slate-100 text-slate-700 ring-slate-300'
-                : 'bg-sun-soft text-[#7A5600] ring-sun/50'
+                : 'bg-sun-soft text-sun ring-sun/25'
             )}
           >
             {driver.type === 'salarie' ? 'Salarié' : 'Indépendant'}
@@ -91,7 +91,7 @@ export function ProfileScreen({ driver, unread, goTo, onSave, notify }: ProfileS
       </Card>
 
       <Card className="space-y-4">
-        <p className="text-sm font-bold uppercase tracking-wide text-slate-500">Identité</p>
+        <p className="text-[12px] font-semibold uppercase tracking-[0.06em] text-slate-500">Identité</p>
         <TextField label="Prénom" value={draft.prenom} onChange={update('prenom')} autoComplete="given-name" />
         <TextField label="Nom" value={draft.nom} onChange={update('nom')} autoComplete="family-name" />
         <TextField
@@ -110,7 +110,7 @@ export function ProfileScreen({ driver, unread, goTo, onSave, notify }: ProfileS
       </Card>
 
       <Card className="space-y-4">
-        <p className="text-sm font-bold uppercase tracking-wide text-slate-500">Permis de conduire</p>
+        <p className="text-[12px] font-semibold uppercase tracking-[0.06em] text-slate-500">Permis de conduire</p>
         <TextField
           label="N° de permis"
           value={draft.permis}
@@ -125,7 +125,7 @@ export function ProfileScreen({ driver, unread, goTo, onSave, notify }: ProfileS
         />
         <p className="text-sm text-slate-500">Expire le {formatDate(draft.permisExpiry)}</p>
         {permitExpiring && (
-          <div className="flex items-center gap-2 rounded-card bg-sun-soft px-3 py-2.5 text-[15px] font-semibold text-[#7A5600]">
+          <div className="flex items-center gap-2 rounded-card bg-warn-soft px-3 py-2.5 text-[14px] font-semibold text-warn-ink">
             <TriangleAlert size={18} />
             {permitDays < 0
               ? 'Permis expiré !'
@@ -135,7 +135,7 @@ export function ProfileScreen({ driver, unread, goTo, onSave, notify }: ProfileS
       </Card>
 
       <Card className="space-y-4">
-        <p className="text-sm font-bold uppercase tracking-wide text-slate-500">Visa / Séjour</p>
+        <p className="text-[12px] font-semibold uppercase tracking-[0.06em] text-slate-500">Visa / Séjour</p>
         <TextField
           label="N° de visa"
           value={draft.visa}
@@ -150,7 +150,7 @@ export function ProfileScreen({ driver, unread, goTo, onSave, notify }: ProfileS
         />
         <p className="text-sm text-slate-500">Expire le {formatDate(draft.visaExpiry)}</p>
         {visaExpiring && (
-          <div className="flex items-center gap-2 rounded-card bg-sun-soft px-3 py-2.5 text-[15px] font-semibold text-[#7A5600]">
+          <div className="flex items-center gap-2 rounded-card bg-warn-soft px-3 py-2.5 text-[14px] font-semibold text-warn-ink">
             <TriangleAlert size={18} />
             {visaDays < 0
               ? 'Visa expiré !'
@@ -160,7 +160,7 @@ export function ProfileScreen({ driver, unread, goTo, onSave, notify }: ProfileS
       </Card>
 
       <Card className="space-y-4">
-        <p className="text-sm font-bold uppercase tracking-wide text-slate-500">Véhicule</p>
+        <p className="text-[12px] font-semibold uppercase tracking-[0.06em] text-slate-500">Véhicule</p>
         <TextField
           label="Matricule tracteur"
           value={draft.tracteur}

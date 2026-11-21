@@ -29,23 +29,23 @@ export function StatusBar({ tone }: { tone: 'light' | 'dark' }) {
 
 export function ScreenHeader({ title, subtitle, onBack, trailing }: ScreenHeaderProps) {
   return (
-    <header className="shrink-0 bg-night px-5 pb-5 text-white">
-      <StatusBar tone="dark" />
-      <div className="mt-3 flex items-start justify-between gap-3">
+    <header className="shrink-0 border-b border-line bg-white px-5 pb-4 text-night">
+      <StatusBar tone="light" />
+      <div className="mt-2 flex items-start justify-between gap-3">
         <div className="flex min-w-0 items-start gap-2">
           {onBack && (
             <button
               type="button"
               onClick={onBack}
               aria-label="Retour"
-              className="-ml-2 flex h-10 w-10 shrink-0 items-center justify-center rounded-full transition hover:bg-white/10 active:scale-95"
+              className="-ml-2 flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-slate-700 transition hover:bg-slate-100 active:scale-95"
             >
               <ChevronLeft size={26} strokeWidth={2.4} />
             </button>
           )}
           <div className="min-w-0 pt-1">
-            <h1 className="text-[26px] font-bold leading-[1.2]">{title}</h1>
-            {subtitle && <p className="mt-0.5 text-sm text-slate-300">{subtitle}</p>}
+            <h1 className="text-[22px] font-semibold leading-[1.25] tracking-[-0.02em]">{title}</h1>
+            {subtitle && <p className="mt-0.5 text-[13px] text-slate-500">{subtitle}</p>}
           </div>
         </div>
         {trailing && <div className="shrink-0 pt-1">{trailing}</div>}

@@ -44,7 +44,7 @@ export function MissionsScreen({ missions, driver, unread, onSelect, goTo }: Mis
       }
       footer={<BottomNav active="missions" onSelect={goTo} />}
     >
-      <div role="tablist" className="grid grid-cols-4 gap-1 rounded-card bg-slate-200/70 p-1">
+      <div role="tablist" className="grid grid-cols-4 gap-1 rounded-xl border border-line bg-slate-100 p-1">
         {TABS.map((item) => {
           const count = missions.filter((mission) => item.statuts.includes(mission.statut)).length;
           const selected = item.id === tab;
@@ -56,12 +56,12 @@ export function MissionsScreen({ missions, driver, unread, onSelect, goTo }: Mis
               aria-selected={selected}
               onClick={() => setTab(item.id)}
               className={cn(
-                'flex flex-col items-center rounded-[10px] px-1 py-2 text-[13px] font-semibold leading-tight transition duration-200',
-                selected ? 'bg-white text-night shadow-sm' : 'text-slate-600 hover:text-night'
+                'flex flex-col items-center rounded-[10px] px-1 py-2 text-[12px] font-semibold leading-tight transition duration-200',
+                selected ? 'bg-white text-night shadow-card ring-1 ring-line' : 'text-slate-500 hover:text-night'
               )}
             >
               {item.label}
-              <span className={cn('mt-0.5 text-xs', selected ? 'text-slate-500' : 'text-slate-500')}>{count}</span>
+              <span className={cn('mt-1 min-w-5 rounded-full px-1.5 text-[11px] leading-[18px]', selected ? 'bg-sun-soft text-sun' : 'bg-slate-200/80 text-slate-500')}>{count}</span>
             </button>
           );
         })}
@@ -69,8 +69,8 @@ export function MissionsScreen({ missions, driver, unread, onSelect, goTo }: Mis
 
       {visible.length === 0 && (
         <Card className="py-10 text-center">
-          <p className="text-lg font-bold">{activeTab.empty}</p>
-          <p className="mt-1 text-[15px] text-slate-500">Les missions apparaîtront ici selon leur avancement.</p>
+          <p className="text-[16px] font-semibold">{activeTab.empty}</p>
+          <p className="mt-1 text-[14px] text-slate-500">Les missions apparaîtront ici selon leur avancement.</p>
         </Card>
       )}
 
@@ -90,48 +90,48 @@ function MissionCard({ mission, index, onSelect }: { mission: Mission; index: nu
       type="button"
       onClick={() => onSelect(mission)}
       style={{ animationDelay: `${index * 80}ms` }}
-      className="group block w-full animate-fade-up rounded-card border border-slate-200 bg-white p-4 text-left shadow-[0_1px_2px_rgba(31,42,55,0.04)] transition duration-200 hover:-translate-y-0.5 hover:border-night/40 hover:shadow-md active:scale-[0.99]"
+      className="group block w-full animate-fade-up rounded-card border border-line bg-white p-4 text-left shadow-card transition duration-200 hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-raised active:scale-[0.99]"
     >
       <div className="flex items-center justify-between gap-3">
-        <p className="text-sm font-semibold text-slate-500">
+        <p className="flex items-center text-[13px] font-medium tabular-nums text-slate-500">
           Mission #{mission.id}
-          {isGroupage(mission) && <span className="ml-2 rounded bg-slate-200 px-1.5 py-0.5 text-xs text-slate-700">Groupage</span>}
+          {isGroupage(mission) && <span className="ml-2 rounded-md bg-slate-100 px-1.5 py-0.5 text-[11px] font-semibold text-slate-600 ring-1 ring-inset ring-line">Groupage</span>}
         </p>
         <StatusBadge status={mission.statut} />
       </div>
 
-      <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-[20px] font-bold leading-tight">
+      <div className="mt-2.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-[18px] font-semibold leading-tight tracking-[-0.02em]">
         {route.map((city, i) => (
           <span key={`${city}-${i}`} className="flex items-center gap-2">
-            {i > 0 && <ArrowRight size={16} className="text-slate-400" />}
+            {i > 0 && <ArrowRight size={15} className="text-slate-300" />}
             {city}
           </span>
         ))}
       </div>
 
-      <p className="mt-2 flex items-center gap-1.5 text-[15px] text-slate-600">
-        <Clock size={15} />
+      <p className="mt-2 flex items-center gap-1.5 text-[13px] text-slate-500">
+        <Clock size={14} />
         Départ prévu {mission.departPrevu}
       </p>
 
       {mission.echec && (
-        <p className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-danger-soft px-3 py-1 text-sm font-semibold text-danger">
+        <p className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-danger-soft px-2.5 py-1 text-[12px] font-semibold text-danger">
           <TriangleAlert size={15} />
           Livraison en échec
         </p>
       )}
 
       {cancelled && (
-        <div className="mt-3 rounded-[10px] bg-danger-soft px-3 py-2.5 text-[15px] text-danger">
-          <span className="font-bold">Motif : </span>
+        <div className="mt-3 rounded-[10px] bg-danger-soft px-3 py-2.5 text-[13px] text-danger">
+          <span className="font-semibold">Motif : </span>
           {mission.motif ?? 'non précisé'}
         </div>
       )}
 
-      <div className="mt-3 flex items-center justify-between border-t border-slate-200 pt-3 text-sm text-slate-600">
+      <div className="mt-3.5 flex items-center justify-between border-t border-line pt-3 text-[13px] text-slate-500">
         <span>{totalPalettes(mission)} palettes · {mission.stops.length} livraison(s)</span>
-        <span className="flex items-center gap-1.5 font-bold text-night">
-          <Banknote size={16} className="text-sun" />
+        <span className="flex items-center gap-1.5 text-[15px] font-semibold tabular-nums text-night">
+          <Banknote size={16} className="text-slate-400" />
           {formatMAD(mission.prix)}
         </span>
       </div>

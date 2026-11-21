@@ -177,7 +177,7 @@ function App() {
 
   return (
     <div className="flex h-dvh w-full items-center justify-center sm:p-6">
-      <div className="relative h-dvh w-full overflow-hidden bg-canvas sm:h-[min(852px,calc(100dvh-48px))] sm:w-[393px] sm:rounded-[44px] sm:shadow-2xl sm:ring-8 sm:ring-night">
+      <div className="relative h-dvh w-full overflow-hidden bg-canvas sm:h-[min(852px,calc(100dvh-48px))] sm:w-[393px] sm:rounded-[44px] sm:shadow-2xl sm:ring-[10px] sm:ring-slate-900">
         {renderScreen()}
         {toast && <Toast key={toast.id} message={toast.text} onDismiss={dismissToast} />}
       </div>

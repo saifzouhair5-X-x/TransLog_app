@@ -68,7 +68,7 @@ export function IncidentScreen({ mission, goTo, back, addAlert, updateMission }:
       }
     >
       <section className="space-y-2">
-        <h2 className="px-1 text-sm font-bold uppercase tracking-wide text-slate-500">Type d’incident</h2>
+        <h2 className="px-1 text-[12px] font-semibold uppercase tracking-[0.06em] text-slate-500">Type d’incident</h2>
         <div className="grid grid-cols-3 gap-2">
           {INCIDENT_TYPES.map((item) => {
             const Icon = item.icon;
@@ -97,7 +97,7 @@ export function IncidentScreen({ mission, goTo, back, addAlert, updateMission }:
       <TextField label="Position" value={position} onChange={(event) => setPosition(event.target.value)} />
 
       <section className="space-y-2">
-        <h2 className="px-1 text-sm font-bold uppercase tracking-wide text-slate-500">Panne bloquante ?</h2>
+        <h2 className="px-1 text-[12px] font-semibold uppercase tracking-[0.06em] text-slate-500">Panne bloquante ?</h2>
         <div className="grid grid-cols-2 gap-3">
           <Choice selected={blocking === true} tone="danger" onClick={() => setBlocking(true)}>
             Oui

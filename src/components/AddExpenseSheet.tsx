@@ -28,14 +28,14 @@ export function AddExpenseSheet({ onAdd, onClose }: AddExpenseSheetProps) {
   };
 
   return (
-    <div className="absolute inset-0 z-40 flex items-end bg-night/50 animate-fade-up" onClick={onClose}>
+    <div className="absolute inset-0 z-40 flex items-end bg-night/40 backdrop-blur-[2px] animate-fade-up" onClick={onClose}>
       <form
         onSubmit={handleSubmit}
         onClick={(event) => event.stopPropagation()}
         className="max-h-[90%] w-full overflow-y-auto rounded-t-[20px] bg-white px-5 pb-7 pt-5 shadow-2xl"
       >
         <div className="mb-5 flex items-center justify-between">
-          <h2 className="text-[22px] font-bold">Ajouter un frais</h2>
+          <h2 className="text-[20px] font-semibold tracking-[-0.02em]">Ajouter un frais</h2>
           <button type="button" onClick={onClose} aria-label="Fermer" className="rounded-full p-1.5 text-slate-500 transition hover:bg-slate-100">
             <X size={22} />
           </button>
@@ -43,7 +43,7 @@ export function AddExpenseSheet({ onAdd, onClose }: AddExpenseSheetProps) {
 
         <div className="space-y-5">
           <div>
-            <p className="mb-2 text-base font-bold">Nature du frais</p>
+            <p className="mb-2 text-[13px] font-semibold text-slate-700">Nature du frais</p>
             <div className="grid grid-cols-2 gap-2.5">
               {EXPENSE_TYPES.map((option) => (
                 <Choice key={option} selected={label === option} onClick={() => setLabel(option)}>
@@ -63,10 +63,10 @@ export function AddExpenseSheet({ onAdd, onClose }: AddExpenseSheetProps) {
           />
 
           <div>
-            <p className="mb-2 text-base font-bold">Justificatif</p>
-            <label className="flex min-h-[58px] cursor-pointer items-center gap-3 rounded-card border-2 border-dashed border-slate-400 px-4 py-3 transition hover:border-night">
+            <p className="mb-2 text-[13px] font-semibold text-slate-700">Justificatif</p>
+            <label className="flex min-h-btn cursor-pointer items-center gap-3 rounded-xl border border-dashed border-slate-300 px-4 py-3 transition hover:border-sun hover:bg-sun-soft">
               <Paperclip size={20} className="shrink-0 text-slate-600" />
-              <span className="min-w-0 flex-1 truncate text-[16px] font-semibold text-night">
+              <span className="min-w-0 flex-1 truncate text-[15px] font-medium text-night">
                 {justificatif ?? 'Joindre une photo ou un PDF'}
               </span>
               <input

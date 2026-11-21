@@ -40,7 +40,7 @@ export function LoadingReservesScreen({ mission, updateMission, goTo, back, addA
       }
     >
       <section className="space-y-2">
-        <h2 className="px-1 text-sm font-bold uppercase tracking-wide text-slate-500">Réserve constatée</h2>
+        <h2 className="px-1 text-[12px] font-semibold uppercase tracking-[0.06em] text-slate-500">Réserve constatée</h2>
         {RESERVES.map((item) => (
           <Choice key={item} selected={reserve === item} tone="danger" align="start" onClick={() => setReserve(item)}>
             {item}
@@ -49,7 +49,7 @@ export function LoadingReservesScreen({ mission, updateMission, goTo, back, addA
       </section>
 
       <section className="space-y-2">
-        <h2 className="px-1 text-sm font-bold uppercase tracking-wide text-slate-500">Motif d’annulation</h2>
+        <h2 className="px-1 text-[12px] font-semibold uppercase tracking-[0.06em] text-slate-500">Motif d’annulation</h2>
         <Card className="space-y-2 p-3">
           {CANCEL_REASONS.map((item) => (
             <Choice key={item} selected={cancelReason === item} tone="danger" align="start" onClick={() => setCancelReason(item)}>

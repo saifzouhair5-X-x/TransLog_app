@@ -51,7 +51,7 @@ export function RefusalScreen({ mission, updateMission, goTo, back, addAlert }: 
       </div>
 
       <Card className="space-y-2">
-        <label htmlFor="refusal-comment" className="text-sm font-bold text-slate-600">
+        <label htmlFor="refusal-comment" className="text-sm font-semibold text-slate-600">
           Commentaire (facultatif)
         </label>
         <textarea

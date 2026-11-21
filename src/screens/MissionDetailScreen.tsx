@@ -56,7 +56,7 @@ export function MissionDetailScreen({ mission, updateMission, goTo, back, addAle
                   value={contreMontant}
                   onChange={(event) => setContreMontant(event.target.value)}
                   placeholder={String(mission.prix)}
-                  className="min-w-0 flex-1 rounded-[10px] border border-slate-300 bg-white px-3 py-3 text-[17px] font-semibold outline-none transition focus:border-night focus:ring-2 focus:ring-night/20"
+                  className="min-w-0 flex-1 rounded-xl border border-slate-300 bg-white px-3 py-3 text-[16px] font-medium tabular-nums outline-none transition focus:border-sun focus:ring-4 focus:ring-sun/10"
                 />
                 <span className="shrink-0 text-sm font-semibold text-slate-500">MAD</span>
                 <Button onClick={sendContre} disabled={!contreMontant || Number(contreMontant) <= 0} className="shrink-0">
@@ -84,16 +84,16 @@ export function MissionDetailScreen({ mission, updateMission, goTo, back, addAle
       <div className="flex items-center justify-between gap-3">
         <StatusBadge status={mission.statut} />
         {isGroupage(mission) && (
-          <span className="rounded-full bg-slate-200 px-3 py-1 text-sm font-semibold text-slate-700">Groupage</span>
+          <span className="rounded-full bg-slate-100 px-2.5 py-1 text-[12px] font-semibold text-slate-600 ring-1 ring-inset ring-line">Groupage</span>
         )}
       </div>
 
       <Card className="space-y-2">
-        <p className="flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-slate-500">
+        <p className="flex items-center gap-2 text-[12px] font-semibold uppercase tracking-[0.06em] text-slate-500">
           <Banknote size={16} />
           Prix de la mission
         </p>
-        <p className="text-[28px] font-bold leading-tight text-night">{formatMAD(mission.prix)}</p>
+        <p className="text-[30px] font-semibold leading-tight tracking-[-0.03em] tabular-nums text-night">{formatMAD(mission.prix)}</p>
         {mission.contreProposition !== null && (
           <p className="text-sm font-semibold text-sun">
             Votre contre-proposition : {formatMAD(mission.contreProposition)}
@@ -111,7 +111,7 @@ export function MissionDetailScreen({ mission, updateMission, goTo, back, addAle
         )}
       </Card>
 
-      <Card className="divide-y divide-slate-200 p-0">
+      <Card className="divide-y divide-line p-0">
         <InfoRow label="Départ prévu" value={mission.departPrevu} />
         <InfoRow label="Arrivée prévue" value={lastStop.arriveePrevue} />
         <InfoRow label="Délai" value={mission.delai} />
@@ -119,8 +119,8 @@ export function MissionDetailScreen({ mission, updateMission, goTo, back, addAle
         <InfoRow label="Marchandise" value={`${mission.goods} · ${totalPalettes(mission)} palettes`} />
       </Card>
 
-      <Card className="divide-y divide-slate-200 p-0">
-        <div className="flex items-center gap-2 p-4 text-sm font-bold uppercase tracking-wide text-slate-500">
+      <Card className="divide-y divide-line p-0">
+        <div className="flex items-center gap-2 p-4 text-[12px] font-semibold uppercase tracking-[0.06em] text-slate-500">
           <Truck size={16} />
           Matricules
         </div>
@@ -129,17 +129,17 @@ export function MissionDetailScreen({ mission, updateMission, goTo, back, addAle
       </Card>
 
       <section className="space-y-3">
-        <h2 className="px-1 text-sm font-bold uppercase tracking-wide text-slate-500">
+        <h2 className="px-1 text-[12px] font-semibold uppercase tracking-[0.06em] text-slate-500">
           Points de livraison ({mission.stops.length})
         </h2>
         {mission.stops.map((stop, index) => (
           <Card key={stop.id} className="flex gap-3 p-4">
-            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-night text-sm font-bold text-white">
+            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-sun-soft text-sm font-semibold text-sun ring-1 ring-inset ring-sun/20">
               {index + 1}
             </span>
             <div className="min-w-0 flex-1 space-y-1">
-              <p className="text-[18px] font-bold leading-tight">{stop.ville}</p>
-              <p className="text-[15px] text-slate-600">{stop.site}</p>
+              <p className="text-[17px] font-semibold leading-tight tracking-[-0.01em]">{stop.ville}</p>
+              <p className="text-[14px] text-slate-600">{stop.site}</p>
               <p className="flex items-start gap-1.5 text-sm text-slate-500">
                 <MapPin size={15} className="mt-0.5 shrink-0" />
                 {stop.adresse}
@@ -153,17 +153,17 @@ export function MissionDetailScreen({ mission, updateMission, goTo, back, addAle
       </section>
 
       <section className="space-y-3">
-        <h2 className="px-1 text-sm font-bold uppercase tracking-wide text-slate-500">Suivi de la mission</h2>
+        <h2 className="px-1 text-[12px] font-semibold uppercase tracking-[0.06em] text-slate-500">Suivi de la mission</h2>
         <Card>
           <ol>
             {timeline.map((step, index) => (
               <li key={step.id} className="flex gap-3">
                 <div className="flex flex-col items-center">
                   <TimelineIcon state={step.state} />
-                  {index < timeline.length - 1 && <span className="my-1 w-0.5 flex-1 bg-slate-200" />}
+                  {index < timeline.length - 1 && <span className="my-1 w-px flex-1 bg-line" />}
                 </div>
                 <div className={cn('min-w-0 pb-4', step.state === 'pending' && 'opacity-60')}>
-                  <p className={cn('text-[16px] font-bold leading-tight', step.state === 'ko' && 'text-danger')}>
+                  <p className={cn('text-[15px] font-semibold leading-tight', step.state === 'ko' && 'text-danger')}>
                     {step.label}
                   </p>
                   <p className="text-sm text-slate-500">{step.detail}</p>
@@ -180,16 +180,16 @@ export function MissionDetailScreen({ mission, updateMission, goTo, back, addAle
 function InfoRow({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex items-start justify-between gap-4 p-4">
-      <span className="text-[15px] text-slate-500">{label}</span>
-      <span className="text-right text-[17px] font-semibold leading-snug">{value}</span>
+      <span className="shrink-0 text-[14px] text-slate-500">{label}</span>
+      <span className="text-right text-[15px] font-medium leading-snug text-night">{value}</span>
     </div>
   );
 }
 
 function TimelineIcon({ state }: { state: TimelineState }) {
-  const base = 'flex h-7 w-7 shrink-0 items-center justify-center rounded-full';
+  const base = 'flex h-6 w-6 shrink-0 items-center justify-center rounded-full';
   if (state === 'done') return <span className={cn(base, 'bg-success text-white')}><Check size={15} strokeWidth={3} /></span>;
   if (state === 'ko') return <span className={cn(base, 'bg-danger text-white')}><X size={15} strokeWidth={3} /></span>;
-  if (state === 'current') return <span className={cn(base, 'bg-sun text-night')}><CircleDot size={15} /></span>;
+  if (state === 'current') return <span className={cn(base, 'bg-sun text-white')}><CircleDot size={15} /></span>;
   return <span className={cn(base, 'border-2 border-slate-300 text-slate-400')}><Circle size={11} /></span>;
 }

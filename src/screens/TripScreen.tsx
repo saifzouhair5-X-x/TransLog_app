@@ -38,7 +38,7 @@ export function TripScreen({ mission, goTo, back, updateMission }: ScreenProps) 
         </div>
       }
     >
-      <div className="relative h-56 overflow-hidden rounded-card border border-slate-200 bg-[#E8EEF2]">
+      <div className="relative h-56 overflow-hidden rounded-card border border-line bg-[#E8EEF2]">
         <svg viewBox="0 0 360 224" className="absolute inset-0 h-full w-full" aria-hidden="true">
           <path d="M-10 170 C 80 120, 120 200, 200 130 S 320 60, 380 90" fill="none" stroke="#FFFFFF" strokeWidth="14" />
           <path d="M-10 170 C 80 120, 120 200, 200 130 S 320 60, 380 90" fill="none" stroke="#1F2A37" strokeWidth="3" strokeDasharray="8 8" />
@@ -52,8 +52,8 @@ export function TripScreen({ mission, goTo, back, updateMission }: ScreenProps) 
       </div>
 
       <Card className="space-y-2">
-        <p className="text-sm font-bold uppercase tracking-wide text-slate-500">Prochain arrêt</p>
-        <p className="text-[22px] font-bold leading-tight">{stop.ville}</p>
+        <p className="text-[12px] font-semibold uppercase tracking-[0.06em] text-slate-500">Prochain arrêt</p>
+        <p className="text-[22px] font-semibold leading-tight">{stop.ville}</p>
         <p className="text-[16px] text-slate-600">{stop.site}</p>
         <p className="flex items-start gap-2 text-[15px] text-slate-600">
           <MapPin size={17} className="mt-0.5 shrink-0" />
@@ -65,8 +65,8 @@ export function TripScreen({ mission, goTo, back, updateMission }: ScreenProps) 
         {summary.reserve && <p className="text-sm font-semibold text-danger">Réserve signalée sur une livraison précédente</p>}
       </Card>
 
-      <Card className="divide-y divide-slate-200 p-0">
-        <div className="flex items-center gap-2 p-4 text-sm font-bold uppercase tracking-wide text-slate-500">
+      <Card className="divide-y divide-line p-0">
+        <div className="flex items-center gap-2 p-4 text-[12px] font-semibold uppercase tracking-[0.06em] text-slate-500">
           <Truck size={16} />
           Véhicule & marchandise
         </div>
@@ -77,10 +77,10 @@ export function TripScreen({ mission, goTo, back, updateMission }: ScreenProps) 
       </Card>
 
       <section className="space-y-2">
-        <h2 className="px-1 text-sm font-bold uppercase tracking-wide text-slate-500">
+        <h2 className="px-1 text-[12px] font-semibold uppercase tracking-[0.06em] text-slate-500">
           Arrêts prévus ({mission.stops.length})
         </h2>
-        <Card className="divide-y divide-slate-200 p-0">
+        <Card className="divide-y divide-line p-0">
           {mission.stops.map((s, index) => {
             const isDone = s.livraison !== null;
             const isCurrent = s.id === stop.id && !isDone;
@@ -88,18 +88,18 @@ export function TripScreen({ mission, goTo, back, updateMission }: ScreenProps) 
               <div key={s.id} className="flex items-center gap-3 p-4">
                 <span
                   className={
-                    'flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-bold ' +
+                    'flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-semibold ' +
                     (isDone
                       ? 'bg-success text-white'
                       : isCurrent
-                        ? 'bg-sun text-night'
+                        ? 'bg-sun text-white'
                         : 'bg-slate-200 text-slate-600')
                   }
                 >
                   {index + 1}
                 </span>
                 <div className="min-w-0 flex-1">
-                  <p className="text-[16px] font-bold leading-tight">{s.ville}</p>
+                  <p className="text-[16px] font-semibold leading-tight">{s.ville}</p>
                   <p className="truncate text-sm text-slate-500">{s.site}</p>
                 </div>
                 <div className="shrink-0 text-right">

@@ -44,7 +44,7 @@ export function DocumentsScreen({ mission, updateMission, goTo, back, notify, ad
         {requiredLabel}
       </InfoBanner>
 
-      <Card className="divide-y divide-slate-200 p-0">
+      <Card className="divide-y divide-line p-0">
         {docs.map((doc) => (
           <DocumentRow
             key={doc.id}
@@ -85,7 +85,7 @@ function DocumentRow({ label, fileName, onScan }: { label: string; fileName: str
       <button
         type="button"
         onClick={() => inputRef.current?.click()}
-        className="flex shrink-0 items-center gap-1.5 rounded-full bg-sun px-3 py-2 text-sm font-bold text-night transition duration-150 hover:bg-sun-hover active:scale-95"
+        className="flex shrink-0 items-center gap-1.5 rounded-full bg-sun px-3 py-2 text-sm font-semibold text-white transition duration-150 hover:bg-sun-hover active:scale-95"
       >
         <Camera size={16} />
         Scanner

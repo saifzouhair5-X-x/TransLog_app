@@ -16,7 +16,7 @@ export function Toast({ message, onDismiss }: ToastProps) {
     <div
       role="status"
       aria-live="polite"
-      className="absolute inset-x-4 bottom-28 z-50 flex animate-toast-in items-center gap-3 rounded-card bg-night px-4 py-3 text-[15px] font-semibold text-white shadow-lg"
+      className="absolute inset-x-4 bottom-28 z-50 flex animate-toast-in items-center gap-3 rounded-xl bg-night px-4 py-3 text-[14px] font-medium text-white shadow-raised"
     >
       <span className="flex-1">{message}</span>
       <button

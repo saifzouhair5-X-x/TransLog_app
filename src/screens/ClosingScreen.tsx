@@ -47,17 +47,17 @@ export function ClosingScreen({ mission, updateMission, goTo, back }: ScreenProp
 
         <section className="space-y-2">
           <div className="flex items-center justify-between px-1">
-            <h2 className="text-sm font-bold uppercase tracking-wide text-slate-500">Frais de mission</h2>
+            <h2 className="text-[12px] font-semibold uppercase tracking-[0.06em] text-slate-500">Frais de mission</h2>
             <button
               type="button"
               onClick={() => setSheetOpen(true)}
-              className="flex items-center gap-1 text-sm font-bold text-night transition hover:text-slate-600"
+              className="flex items-center gap-1 text-sm font-semibold text-night transition hover:text-slate-600"
             >
               <Plus size={16} />
               Ajouter
             </button>
           </div>
-          <Card className="divide-y divide-slate-200 p-0">
+          <Card className="divide-y divide-line p-0">
             {mission.expenses.length === 0 && <p className="p-4 text-[15px] text-slate-500">Aucun frais déclaré</p>}
             {mission.expenses.map((expense) => (
               <div key={expense.id} className="flex items-center justify-between gap-3 p-4">
@@ -69,8 +69,8 @@ export function ClosingScreen({ mission, updateMission, goTo, back }: ScreenProp
               </div>
             ))}
             <div className="flex items-center justify-between gap-3 p-4">
-              <span className="font-bold">Total</span>
-              <span className="text-[18px] font-bold">{formatMAD(total)}</span>
+              <span className="font-semibold">Total</span>
+              <span className="text-[18px] font-semibold">{formatMAD(total)}</span>
             </div>
           </Card>
         </section>

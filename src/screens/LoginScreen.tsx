@@ -1,4 +1,4 @@
-import { Truck } from 'lucide-react';
+import { ShieldCheck, Truck } from 'lucide-react';
 import { useState, type FormEvent } from 'react';
 import { Button } from '@/components/Button';
 import { Choice } from '@/components/Choice';
@@ -24,44 +24,41 @@ export function LoginScreen({ goTo, driverType, onSelectType }: LoginScreenProps
   };
 
   return (
-    <div className="flex h-full flex-col bg-canvas">
-      <header className="shrink-0 bg-night px-6 pb-12 pt-3 text-white">
-        <StatusBar tone="dark" />
-        <div className="mt-8 flex flex-col items-start gap-5 animate-fade-up">
-          <div className="flex h-16 w-16 items-center justify-center rounded-card bg-sun text-night shadow-lg">
-            <Truck size={34} strokeWidth={2.2} />
+    <div className="flex h-full flex-col bg-white">
+      <header className="shrink-0 px-6 pt-3">
+        <StatusBar tone="light" />
+        <div className="mt-6 flex items-center gap-2.5 animate-fade-up">
+          <div className="flex h-9 w-9 items-center justify-center rounded-[10px] bg-night text-white">
+            <Truck size={19} strokeWidth={2.2} />
           </div>
-          <div>
-            <p className="text-[34px] font-bold leading-none tracking-tight">TransLog</p>
-            <p className="mt-2 text-lg text-slate-300">Espace chauffeur</p>
-          </div>
+          <p className="text-[17px] font-semibold tracking-[-0.02em]">TransLog</p>
+          <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[11px] font-semibold text-slate-600">Chauffeur</span>
         </div>
       </header>
 
-      <form onSubmit={handleSubmit} className="flex flex-1 flex-col px-6 pt-8 animate-fade-up overflow-y-auto no-scrollbar">
-        <div className="space-y-3">
-          <p className="text-sm font-bold uppercase tracking-wide text-slate-500">Type de chauffeur (démo)</p>
-          <div className="grid grid-cols-2 gap-3">
-            <Choice
-              selected={driverType === 'salarie'}
-              align="start"
-              onClick={() => onSelectType('salarie')}
-            >
+      <form onSubmit={handleSubmit} className="no-scrollbar flex flex-1 flex-col overflow-y-auto px-6 pt-10 animate-fade-up">
+        <div>
+          <h1 className="text-[30px] font-semibold leading-tight tracking-[-0.03em]">Bienvenue</h1>
+          <p className="mt-2 text-[15px] leading-relaxed text-slate-500">
+            Connectez-vous pour voir vos missions, vos documents et vos alertes.
+          </p>
+        </div>
+
+        <div className="mt-8 space-y-2.5">
+          <p className="text-[13px] font-semibold text-slate-700">Profil (démo)</p>
+          <div className="grid grid-cols-2 gap-2.5">
+            <Choice selected={driverType === 'salarie'} align="start" onClick={() => onSelectType('salarie')}>
               <span className="flex flex-col gap-0.5">
-                <span className="text-[16px] font-bold">Salarié</span>
-                <span className={cn('text-xs font-normal', driverType === 'salarie' ? 'text-[#7A5600]' : 'text-slate-500')}>
+                <span className="text-[15px] font-semibold">Salarié</span>
+                <span className={cn('text-[12px] font-normal', driverType === 'salarie' ? 'text-sun' : 'text-slate-500')}>
                   Employé par un transporteur
                 </span>
               </span>
             </Choice>
-            <Choice
-              selected={driverType === 'independant'}
-              align="start"
-              onClick={() => onSelectType('independant')}
-            >
+            <Choice selected={driverType === 'independant'} align="start" onClick={() => onSelectType('independant')}>
               <span className="flex flex-col gap-0.5">
-                <span className="text-[16px] font-bold">Indépendant</span>
-                <span className={cn('text-xs font-normal', driverType === 'independant' ? 'text-[#7A5600]' : 'text-slate-500')}>
+                <span className="text-[15px] font-semibold">Indépendant</span>
+                <span className={cn('text-[12px] font-normal', driverType === 'independant' ? 'text-sun' : 'text-slate-500')}>
                   Propre camion, missions au choix
                 </span>
               </span>
@@ -69,7 +66,7 @@ export function LoginScreen({ goTo, driverType, onSelectType }: LoginScreenProps
           </div>
         </div>
 
-        <div className="mt-6 space-y-5">
+        <div className="mt-6 space-y-4">
           <TextField
             label="Identifiant chauffeur"
             placeholder={driverType === 'salarie' ? 'ex. K.BENALI' : 'ex. Y.MANSOURI'}
@@ -93,7 +90,8 @@ export function LoginScreen({ goTo, driverType, onSelectType }: LoginScreenProps
           </Button>
         </div>
 
-        <p className="mt-auto pb-8 pt-6 text-center text-[15px] text-slate-500">
+        <p className="mt-auto flex items-center justify-center gap-1.5 pb-8 pt-6 text-center text-[13px] text-slate-500">
+          <ShieldCheck size={15} className="shrink-0 text-slate-400" />
           Un problème de connexion ? Contactez votre exploitant.
         </p>
       </form>

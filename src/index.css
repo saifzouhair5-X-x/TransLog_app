@@ -10,7 +10,8 @@
   }
 
   body {
-    @apply bg-slate-200 font-sans text-night antialiased;
+    @apply bg-slate-100 font-sans text-night antialiased;
+    font-feature-settings: 'cv11', 'ss01';
   }
 }
 

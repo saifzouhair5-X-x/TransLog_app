@@ -46,7 +46,7 @@ export function UnloadingScreen({ mission, updateMission, goTo, back, addAlert }
       }
     >
       <section className="space-y-2">
-        <h2 className="px-1 text-sm font-bold uppercase tracking-wide text-slate-500">État de la livraison</h2>
+        <h2 className="px-1 text-[12px] font-semibold uppercase tracking-[0.06em] text-slate-500">État de la livraison</h2>
         <div className="grid grid-cols-2 gap-3">
           <Choice selected={withReserve === false} tone="success" onClick={() => setWithReserve(false)}>
             Sans réserve

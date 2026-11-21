@@ -27,7 +27,7 @@ export function SignaturePad({ label, caption, onChange }: SignaturePadProps) {
     ctx.lineWidth = 2.5;
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
-    ctx.strokeStyle = '#1F2A37';
+    ctx.strokeStyle = '#0F172A';
   }, []);
 
   const pointFromEvent = (event: PointerEvent<HTMLCanvasElement>) => {
@@ -76,12 +76,12 @@ export function SignaturePad({ label, caption, onChange }: SignaturePadProps) {
       <div className="mb-2 flex items-center justify-between">
         <h2 className="text-base font-bold">{label}</h2>
         {signed && (
-          <button type="button" onClick={clear} className="text-[15px] font-semibold text-[#1F5FA8] transition hover:underline">
+          <button type="button" onClick={clear} className="text-[14px] font-semibold text-sun transition hover:underline">
             Effacer
           </button>
         )}
       </div>
-      <div className="relative rounded-card border-2 border-dashed border-slate-300 bg-white">
+      <div className="relative rounded-card border border-dashed border-slate-300 bg-white">
         <canvas
           ref={canvasRef}
           aria-label={label}

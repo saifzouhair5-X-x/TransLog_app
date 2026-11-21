@@ -39,7 +39,7 @@ export function VehicleCheckScreen({ mission, updateMission, goTo, back, addAler
         </Button>
       }
     >
-      <Card className="divide-y divide-slate-200 p-0">
+      <Card className="divide-y divide-line p-0">
         {SIMPLE_CHECKS.map((item) => {
           const isChecked = checked.includes(item);
           return (

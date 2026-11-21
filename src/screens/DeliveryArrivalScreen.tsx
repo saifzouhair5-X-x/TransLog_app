@@ -62,8 +62,8 @@ export function DeliveryArrivalScreen({ mission, updateMission, goTo, back, addA
       }
     >
       <Card className="space-y-3">
-        <p className="text-sm font-bold uppercase tracking-wide text-slate-500">Destinataire</p>
-        <p className="text-[20px] font-bold leading-tight">{stop.recipient}</p>
+        <p className="text-[12px] font-semibold uppercase tracking-[0.06em] text-slate-500">Destinataire</p>
+        <p className="text-[20px] font-semibold leading-tight">{stop.recipient}</p>
         <a href={`tel:${stop.recipientPhone.replace(/\s/g, '')}`} className="flex items-center gap-2 text-[16px] font-semibold text-night underline-offset-4 hover:underline">
           <Phone size={17} />
           {stop.recipientPhone}
@@ -74,7 +74,7 @@ export function DeliveryArrivalScreen({ mission, updateMission, goTo, back, addA
         </p>
       </Card>
 
-      <Card className="divide-y divide-slate-200 p-0">
+      <Card className="divide-y divide-line p-0">
         <div className="flex items-center justify-between gap-4 p-4">
           <span className="text-[15px] text-slate-500">Créneau</span>
           <span className="text-right text-[17px] font-semibold">
@@ -88,13 +88,13 @@ export function DeliveryArrivalScreen({ mission, updateMission, goTo, back, addA
       </Card>
 
       {!inWindow && (
-        <p className="rounded-card bg-sun-soft px-4 py-3 text-[15px] font-semibold text-[#7A5600]">
+        <p className="rounded-card bg-warn-soft px-4 py-3 text-[14px] font-semibold text-warn-ink">
           Vous êtes hors du créneau de livraison prévu.
         </p>
       )}
 
       <Card className="space-y-3">
-        <p className="text-sm font-bold uppercase tracking-wide text-slate-500">
+        <p className="text-[12px] font-semibold uppercase tracking-[0.06em] text-slate-500">
           {docLabel} signé et cacheté
         </p>
         <div className="flex items-center justify-between gap-3">
@@ -114,7 +114,7 @@ export function DeliveryArrivalScreen({ mission, updateMission, goTo, back, addA
           <button
             type="button"
             onClick={() => inputRef.current?.click()}
-            className="flex shrink-0 items-center gap-1.5 rounded-full bg-sun px-3 py-2 text-sm font-bold text-night transition duration-150 hover:bg-sun-hover active:scale-95"
+            className="flex shrink-0 items-center gap-1.5 rounded-full bg-sun px-3 py-2 text-sm font-semibold text-white transition duration-150 hover:bg-sun-hover active:scale-95"
           >
             <Camera size={16} />
             Scanner

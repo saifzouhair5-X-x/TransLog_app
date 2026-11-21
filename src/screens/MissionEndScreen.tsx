@@ -21,13 +21,13 @@ export function MissionEndScreen({ mission, goTo }: ScreenProps) {
         <span className="flex h-16 w-16 items-center justify-center rounded-full bg-success-soft text-success">
           <CheckCircle2 size={36} />
         </span>
-        <p className="mt-4 text-[22px] font-bold">Mission clôturée</p>
+        <p className="mt-4 text-[22px] font-semibold">Mission clôturée</p>
         <p className="text-[16px] text-slate-500">
           {mission.origin} → {mission.stops.map((stop) => stop.ville).join(' → ')}
         </p>
       </div>
 
-      <Card className="divide-y divide-slate-200 p-0">
+      <Card className="divide-y divide-line p-0">
         <SummaryRow label="Arrêts livrés" value={`${mission.stops.length} / ${mission.stops.length}`} />
         <SummaryRow label="Palettes" value={String(totalPalettes(mission))} />
         <SummaryRow label="Dernière livraison" value={summary.heure ?? '-'} />

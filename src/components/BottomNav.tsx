@@ -28,17 +28,17 @@ export function BottomNav({ active, onSelect }: BottomNavProps) {
             onClick={() => onSelect(id)}
             aria-current={isActive ? 'page' : undefined}
             className={cn(
-              'flex flex-col items-center gap-1 rounded-card py-1.5 text-xs font-semibold transition duration-200 active:scale-95',
-              isActive ? 'text-night' : 'text-slate-500 hover:text-night'
+              'flex flex-col items-center gap-1 rounded-card py-1.5 text-[11px] font-medium transition duration-200 active:scale-95',
+              isActive ? 'font-semibold text-sun' : 'text-slate-500 hover:text-night'
             )}
           >
             <span
               className={cn(
                 'flex h-8 w-12 items-center justify-center rounded-full transition duration-200',
-                isActive ? 'bg-sun text-night' : 'bg-transparent'
+                isActive ? 'bg-sun-soft text-sun' : 'bg-transparent'
               )}
             >
-              <Icon size={22} strokeWidth={2.2} />
+              <Icon size={21} strokeWidth={isActive ? 2.3 : 1.9} />
             </span>
             {label}
           </button>
