@@ -83,6 +83,10 @@ export interface Mission {
   loadingSite: string;
   loadingAddress: string;
   goods: string;
+  /** Type de marchandise (catégorie) */
+  categorie?: string;
+  /** Type de palette utilisée */
+  typePalette?: string;
   type: MissionType;
   agroalimentaire: boolean;
   poids: number;

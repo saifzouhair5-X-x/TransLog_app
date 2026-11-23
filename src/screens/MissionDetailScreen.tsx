@@ -6,7 +6,7 @@ import { ScreenHeader } from '@/components/ScreenHeader';
 import { ScreenShell } from '@/components/ScreenShell';
 import { StatusBadge } from '@/components/StatusBadge';
 import { cn } from '@/lib/cn';
-import { currentTime, formatMAD, formatNumber } from '@/lib/format';
+import { currentTime, formatMAD, formatNumber, formatTonnes } from '@/lib/format';
 import { isGroupage, totalPalettes } from '@/lib/missions';
 import { SOURCE_COUTS, tripCost } from '@/lib/pricing';
 import { buildTimeline, type TimelineState } from '@/lib/timeline';
@@ -138,7 +138,11 @@ export function MissionDetailScreen({ mission, updateMission, goTo, back, addAle
         <InfoRow label="Arrivée prévue" value={lastStop.arriveePrevue} />
         <InfoRow label="Délai" value={mission.delai} />
         <InfoRow label="Localisation" value={mission.localisation} />
-        <InfoRow label="Marchandise" value={`${mission.goods} · ${totalPalettes(mission)} palettes`} />
+        {mission.categorie && <InfoRow label="Type de marchandise" value={mission.categorie} />}
+        <InfoRow label="Marchandise" value={mission.goods} />
+        <InfoRow label="Tonnage" value={formatTonnes(mission.poids)} />
+        <InfoRow label="Palettes" value={`${totalPalettes(mission)} palettes`} />
+        {mission.typePalette && <InfoRow label="Type de palette" value={mission.typePalette} />}
       </Card>
 
       <Card className="divide-y divide-line p-0">

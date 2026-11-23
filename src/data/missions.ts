@@ -622,6 +622,28 @@ function buildMissions(): Mission[] {
     '1021': { distanceKm: 240, peage: 161, prix: 2700 }, // Marrakech – Casablanca
   };
 
+  // Type de marchandise et type de palette
+  const CHARGEMENT: Record<string, { categorie: string; typePalette: string }> = {
+    '1024': { categorie: 'Agroalimentaire sec', typePalette: 'Palette Europe (EPAL) 80 × 120 cm' },
+    '1025': { categorie: 'Pièces automobiles', typePalette: 'Palette industrielle 100 × 120 cm' },
+    '1026': { categorie: 'Boissons', typePalette: 'Palette industrielle 100 × 120 cm' },
+    '1027': { categorie: 'Agroalimentaire frais (fruits et légumes)', typePalette: 'Palette Europe 80 × 120 cm, traitée NIMP 15' },
+    '1018': { categorie: 'Électronique', typePalette: 'Palette Europe (EPAL) 80 × 120 cm' },
+    '1019': { categorie: 'Textile', typePalette: 'Palette industrielle 100 × 120 cm' },
+    '1020': { categorie: 'Conserves alimentaires', typePalette: 'Palette Europe (EPAL) 80 × 120 cm' },
+    '1015': { categorie: 'Mobilier', typePalette: 'Palette industrielle 100 × 120 cm' },
+    '1016': { categorie: 'Produits chimiques (matières dangereuses ADR)', typePalette: 'Palette industrielle 100 × 120 cm' },
+    '1017': { categorie: 'Produits pharmaceutiques', typePalette: 'Palette Europe (EPAL) 80 × 120 cm' },
+    '1021': { categorie: 'Matériaux de construction', typePalette: 'Palette industrielle 100 × 120 cm' },
+  };
+  for (const mission of missions) {
+    const chargement = CHARGEMENT[mission.id];
+    if (chargement) {
+      mission.categorie = chargement.categorie;
+      mission.typePalette = chargement.typePalette;
+    }
+  }
+
   // Compteurs kilométriques cohérents avec les distances réelles
   const KM_EFFECTUES: Record<string, [number, number]> = {
     '1019': [182000, 182625],

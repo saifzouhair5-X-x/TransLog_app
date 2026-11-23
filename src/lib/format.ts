@@ -4,6 +4,10 @@ export function formatNumber(value: number): string {
   return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '\u00A0');
 }
 
+export function formatTonnes(kg: number): string {
+  return `${(kg / 1000).toLocaleString('fr-FR', { maximumFractionDigits: 1 })} t`;
+}
+
 export function formatMAD(value: number): string {
   return `${formatNumber(value)} MAD`;
 }

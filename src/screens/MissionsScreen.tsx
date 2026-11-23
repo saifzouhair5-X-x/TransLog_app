@@ -6,7 +6,7 @@ import { NotificationBell } from '@/components/NotificationBell';
 import { ScreenHeader } from '@/components/ScreenHeader';
 import { ScreenShell } from '@/components/ScreenShell';
 import { StatusBadge } from '@/components/StatusBadge';
-import { formatMAD } from '@/lib/format';
+import { formatMAD, formatTonnes } from '@/lib/format';
 import { isGroupage, totalPalettes } from '@/lib/missions';
 import { cn } from '@/lib/cn';
 import type { Driver, Mission, MissionStatus, ScreenId } from '@/lib/types';
@@ -109,7 +109,13 @@ function MissionCard({ mission, index, onSelect }: { mission: Mission; index: nu
         ))}
       </div>
 
-      <p className="mt-2 flex items-center gap-1.5 text-[13px] text-slate-500">
+      {mission.categorie && (
+        <p className="mt-2 text-[13px] font-medium text-slate-700">
+          {mission.categorie} · {formatTonnes(mission.poids)}
+        </p>
+      )}
+
+      <p className="mt-1.5 flex items-center gap-1.5 text-[13px] text-slate-500">
         <Clock size={14} />
         Départ prévu {mission.departPrevu}
       </p>
@@ -129,7 +135,9 @@ function MissionCard({ mission, index, onSelect }: { mission: Mission; index: nu
       )}
 
       <div className="mt-3.5 flex items-center justify-between border-t border-line pt-3 text-[13px] text-slate-500">
-        <span>{totalPalettes(mission)} palettes · {mission.stops.length} livraison(s)</span>
+        <span>
+          {totalPalettes(mission)} palettes{mission.typePalette ? ` ${mission.typePalette.startsWith('Palette Europe') ? 'Europe' : 'industrielles'}` : ''} · {mission.stops.length} livraison(s)
+        </span>
         <span className="flex items-center gap-1.5 text-[15px] font-semibold tabular-nums text-night">
           <Banknote size={16} className="text-slate-400" />
           {formatMAD(mission.prix)}
