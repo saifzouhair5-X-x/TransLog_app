@@ -1,18 +1,17 @@
 import { useState } from 'react';
 import {
+  Ban,
+  Boxes,
   Clock,
-  Wrench,
-  CarFront,
-  PackageX,
   PackageMinus,
-  Anchor,
-  Snowflake,
+  PackageX,
   ShieldAlert,
-  Banknote,
+  Thermometer,
+  TriangleAlert,
+  Wrench,
   type LucideIcon,
 } from 'lucide-react';
 import { Button } from '@/components/Button';
-import { Card } from '@/components/Card';
 import { Choice } from '@/components/Choice';
 import { ScreenHeader } from '@/components/ScreenHeader';
 import { ScreenShell } from '@/components/ScreenShell';
@@ -22,19 +21,20 @@ import type { ScreenProps } from '@/lib/types';
 
 interface IncidentType {
   label: string;
+  description: string;
   icon: LucideIcon;
 }
 
 const INCIDENT_TYPES: IncidentType[] = [
-  { label: 'Retard', icon: Clock },
-  { label: 'Panne', icon: Wrench },
-  { label: 'Accident', icon: CarFront },
-  { label: 'Marchandise endommagée', icon: PackageX },
-  { label: 'Marchandise manquante', icon: PackageMinus },
-  { label: 'Mal arrimée', icon: Anchor },
-  { label: 'Rupture de froid', icon: Snowflake },
-  { label: 'Vol', icon: ShieldAlert },
-  { label: 'Refus du destinataire', icon: Banknote },
+  { label: 'Retard', description: 'Bouchon, attente ou route fermée', icon: Clock },
+  { label: 'Panne', description: 'Problème mécanique du camion', icon: Wrench },
+  { label: 'Accident', description: 'Collision ou sortie de route', icon: TriangleAlert },
+  { label: 'Marchandise endommagée', description: 'Colis ou palettes cassés, abîmés', icon: PackageX },
+  { label: 'Marchandise manquante', description: 'Palettes ou colis en moins', icon: PackageMinus },
+  { label: 'Mal arrimée', description: 'Le chargement bouge, sangles lâches', icon: Boxes },
+  { label: 'Rupture de froid', description: 'Température hors norme (frigo)', icon: Thermometer },
+  { label: 'Vol', description: 'Marchandise ou matériel volé', icon: ShieldAlert },
+  { label: 'Refus du destinataire', description: 'Le client refuse la livraison', icon: Ban },
 ];
 
 export function IncidentScreen({ mission, goTo, back, addAlert, updateMission }: ScreenProps) {
@@ -69,7 +69,7 @@ export function IncidentScreen({ mission, goTo, back, addAlert, updateMission }:
     >
       <section className="space-y-2">
         <h2 className="px-1 text-[12px] font-semibold uppercase tracking-[0.06em] text-slate-500">Type d’incident</h2>
-        <div className="grid grid-cols-3 gap-2">
+        <div className="space-y-2">
           {INCIDENT_TYPES.map((item) => {
             const Icon = item.icon;
             const selected = type === item.label;
@@ -80,14 +80,26 @@ export function IncidentScreen({ mission, goTo, back, addAlert, updateMission }:
                 aria-pressed={selected}
                 onClick={() => setType(item.label)}
                 className={
-                  'flex flex-col items-center gap-2 rounded-card border-2 px-2 py-4 text-center transition duration-150 active:scale-[0.97] ' +
+                  'flex w-full items-center gap-3 rounded-xl border px-3 py-3 text-left transition duration-150 active:scale-[0.99] ' +
                   (selected
-                    ? 'border-danger bg-danger-soft text-danger'
-                    : 'border-slate-300 bg-white text-night hover:border-slate-400')
+                    ? 'border-danger bg-danger-soft ring-1 ring-danger'
+                    : 'border-line bg-white hover:border-slate-300 hover:bg-slate-50')
                 }
               >
-                <Icon size={28} strokeWidth={2.2} />
-                <span className="text-[13px] font-semibold leading-tight">{item.label}</span>
+                <span
+                  className={
+                    'flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ' +
+                    (selected ? 'bg-danger text-white' : 'bg-slate-100 text-slate-700')
+                  }
+                >
+                  <Icon size={20} strokeWidth={2} />
+                </span>
+                <span className="min-w-0">
+                  <span className={'block text-[15px] font-semibold leading-tight ' + (selected ? 'text-danger' : 'text-night')}>
+                    {item.label}
+                  </span>
+                  <span className="mt-0.5 block text-[13px] leading-snug text-slate-500">{item.description}</span>
+                </span>
               </button>
             );
           })}

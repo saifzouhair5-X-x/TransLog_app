@@ -13,7 +13,7 @@ export function currentTime(): string {
 }
 
 export function formatDateTime(date: Date): string {
-  const weekday = date.toLocaleDateString('fr-FR', { weekday: 'short' });
+  const weekday = date.toLocaleDateString('fr-FR', { weekday: 'short' }).replace(/\.$/, '');
   const dd = String(date.getDate()).padStart(2, '0');
   const mm = String(date.getMonth() + 1).padStart(2, '0');
   const yyyy = date.getFullYear();

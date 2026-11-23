@@ -15,10 +15,11 @@ export const ALL_DOCUMENTS: { id: DocumentId; label: string }[] = [
 export function documentsForMission(mission: Mission): { id: DocumentId; label: string; required: boolean }[] {
   const required = new Set<DocumentId>();
 
-  if (mission.type === 'nationale') {
-    required.add('bl');
-  } else {
-    required.add('cmr');
+  // CMR et BL : toujours présents, pour toutes les missions
+  required.add('cmr');
+  required.add('bl');
+
+  if (mission.type === 'internationale') {
     required.add('tir');
     required.add('dum');
     required.add('eur1');

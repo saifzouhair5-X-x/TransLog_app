@@ -1,6 +1,8 @@
 import { emptyCustoms } from '@/data/customs';
 import { emptyDocuments } from '@/data/documents';
 import { addDays, delaiText, fmt, rangeForPasse, rangeForPlanifiee } from '@/lib/dates';
+import { atTime } from '@/lib/format';
+import { fuelCost } from '@/lib/pricing';
 import type { Mission } from '@/lib/types';
 
 const today = new Date();
@@ -547,6 +549,106 @@ function buildMissions(): Mission[] {
     expenses: [],
     incidents: [],
   });
+
+  // --- Mission internationale (export) : Agadir → Perpignan via Tanger Med ---
+  const d1027 = atTime(addDays(today, 2), 6, 0);
+  const a1027 = atTime(addDays(d1027, 3), 8, 0);
+  missions.push({
+    id: '1027',
+    origin: 'Agadir',
+    destination: 'Perpignan',
+    loadingSite: 'Station de conditionnement Souss Primeurs',
+    loadingAddress: 'Aït Melloul, Agadir, quai frigorifique 3',
+    goods: 'Tomates fraîches en colis, transport frigorifique à 8 °C',
+    type: 'internationale',
+    agroalimentaire: true,
+    poids: 22000,
+    tracteur: '12345-A-6',
+    remorque: '67890-F-7 (frigorifique)',
+    proposeeLe: fmt(atTime(today, 9, 30)),
+    departPrevu: fmt(d1027),
+    delai: delaiText(a1027),
+    localisation: 'Aït Melloul, Agadir',
+    stops: [
+      {
+        id: '1027-1',
+        ville: 'Perpignan',
+        site: 'Marché international Saint-Charles',
+        adresse: 'Perpignan (France), avenue de Milan',
+        recipient: 'M. Garcia, réception import',
+        recipientPhone: '+33 4 68 00 12 34',
+        window: { start: '06:00', end: '10:00' },
+        arriveePrevue: fmt(a1027),
+        palettes: 33,
+        poids: 22000,
+        livraison: null,
+      },
+    ],
+    statut: 'a_accepter',
+    etape: 'mission-detail',
+    echec: false,
+    motif: null,
+    kmDepart: 184520,
+    kmArrivee: null,
+    kmParcourus: null,
+    acceptedAt: null,
+    departAt: null,
+    chargeAt: null,
+    documentsAt: null,
+    documents: emptyDocuments(),
+    customs: emptyCustoms(),
+    prix: 38000,
+    contreProposition: null,
+    expenses: [
+      { id: 'peage-1027', label: 'Péage', amount: 0 },
+      { id: 'carburant-1027', label: 'Carburant', amount: 0 },
+      { id: 'traversee-1027', label: 'Traversée Tanger Med – Algésiras', amount: 7500 },
+    ],
+    incidents: [],
+  });
+
+  // --- Prix réels : distance routière, péages ADM classe 3, gasoil à 16,62 MAD/L ---
+  const PRIX_REELS: Record<string, { distanceKm: number; peage: number; prix: number; traversee?: number }> = {
+    '1024': { distanceKm: 87, peage: 43, prix: 1800 }, // Casablanca – Rabat
+    '1025': { distanceKm: 412, peage: 247, prix: 4900 }, // Casablanca – Rabat – Marrakech (groupage)
+    '1026': { distanceKm: 320, peage: 245, prix: 3800 }, // Tanger Med – Fès
+    '1027': { distanceKm: 2025, peage: 566, prix: 38000, traversee: 7500 }, // Agadir – Tanger Med – Perpignan
+    '1018': { distanceKm: 460, peage: 348, prix: 5200 }, // Casablanca – Agadir
+    '1019': { distanceKm: 625, peage: 379, prix: 6600 }, // Tanger Med – Marrakech
+    '1020': { distanceKm: 230, peage: 113, prix: 2900 }, // Casablanca – Meknès
+    '1015': { distanceKm: 340, peage: 218, prix: 3900 }, // Casablanca – Tanger
+    '1016': { distanceKm: 530, peage: 216, prix: 6500 }, // Rabat – Oujda (produits chimiques)
+    '1017': { distanceKm: 290, peage: 138, prix: 3600 }, // Casablanca – Fès (température dirigée)
+    '1021': { distanceKm: 240, peage: 161, prix: 2700 }, // Marrakech – Casablanca
+  };
+
+  // Compteurs kilométriques cohérents avec les distances réelles
+  const KM_EFFECTUES: Record<string, [number, number]> = {
+    '1019': [182000, 182625],
+    '1018': [182625, 183085],
+    '1020': [183085, 183315],
+  };
+
+  for (const mission of missions) {
+    const reel = PRIX_REELS[mission.id];
+    if (reel) {
+      mission.distanceKm = reel.distanceKm;
+      mission.peage = reel.peage;
+      mission.traversee = reel.traversee;
+      mission.prix = reel.prix;
+      mission.expenses = mission.expenses.map((expense) => {
+        if (expense.label === 'Péage') return { ...expense, amount: reel.peage };
+        if (expense.label === 'Carburant') return { ...expense, amount: fuelCost(reel.distanceKm) };
+        return expense;
+      });
+    }
+    const km = KM_EFFECTUES[mission.id];
+    if (km) {
+      mission.kmDepart = km[0];
+      mission.kmArrivee = km[1];
+      mission.kmParcourus = km[1] - km[0];
+    }
+  }
 
   return missions;
 }

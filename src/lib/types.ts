@@ -107,6 +107,12 @@ export interface Mission {
   documents: DocumentsState;
   customs: CustomsState;
   prix: number;
+  /** Distance routière du trajet complet, en km */
+  distanceKm?: number;
+  /** Péages autoroute (ADM classe 3, et Europe si international), en MAD */
+  peage?: number;
+  /** Traversée maritime Tanger Med – Algésiras (mission internationale), en MAD */
+  traversee?: number;
   contreProposition: number | null;
   expenses: Expense[];
   incidents: IncidentReport[];

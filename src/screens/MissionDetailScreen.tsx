@@ -6,8 +6,9 @@ import { ScreenHeader } from '@/components/ScreenHeader';
 import { ScreenShell } from '@/components/ScreenShell';
 import { StatusBadge } from '@/components/StatusBadge';
 import { cn } from '@/lib/cn';
-import { currentTime, formatMAD } from '@/lib/format';
+import { currentTime, formatMAD, formatNumber } from '@/lib/format';
 import { isGroupage, totalPalettes } from '@/lib/missions';
+import { SOURCE_COUTS, tripCost } from '@/lib/pricing';
 import { buildTimeline, type TimelineState } from '@/lib/timeline';
 import type { Driver, ScreenProps } from '@/lib/types';
 
@@ -41,6 +42,7 @@ export function MissionDetailScreen({ mission, updateMission, goTo, back, addAle
   };
 
   const totalFrais = mission.expenses.reduce((sum, e) => sum + e.amount, 0);
+  const cout = tripCost(mission);
 
   return (
     <ScreenShell
@@ -110,6 +112,26 @@ export function MissionDetailScreen({ mission, updateMission, goTo, back, addAle
           </p>
         )}
       </Card>
+
+      {cout && (
+        <Card className="divide-y divide-line p-0">
+          <div className="flex items-center justify-between gap-2 p-4">
+            <p className="text-[12px] font-semibold uppercase tracking-[0.06em] text-slate-500">Coût réel du trajet</p>
+            {mission.type === 'internationale' && (
+              <span className="rounded-full bg-sun-soft px-2.5 py-0.5 text-[11px] font-semibold text-sun ring-1 ring-inset ring-sun/25">
+                International
+              </span>
+            )}
+          </div>
+          <InfoRow label="Distance" value={`${formatNumber(cout.distanceKm)} km`} />
+          <InfoRow label="Carburant (gasoil)" value={formatMAD(cout.carburant)} />
+          <InfoRow label={mission.type === 'internationale' ? 'Péages Maroc (ADM)' : 'Péages autoroute'} value={formatMAD(cout.peage)} />
+          {cout.traversee > 0 && <InfoRow label="Traversée Tanger Med – Algésiras" value={formatMAD(cout.traversee)} />}
+          <InfoRow label="Total des coûts" value={formatMAD(cout.total)} />
+          <InfoRow label={isIndependant ? 'Marge avant salaire et entretien' : 'Écart prix / coûts'} value={formatMAD(mission.prix - cout.total)} />
+          <p className="p-4 text-[12px] leading-relaxed text-slate-500">{SOURCE_COUTS}</p>
+        </Card>
+      )}
 
       <Card className="divide-y divide-line p-0">
         <InfoRow label="Départ prévu" value={mission.departPrevu} />

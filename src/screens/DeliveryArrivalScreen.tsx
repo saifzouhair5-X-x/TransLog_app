@@ -5,7 +5,7 @@ import { Card } from '@/components/Card';
 import { ScreenHeader } from '@/components/ScreenHeader';
 import { ScreenShell } from '@/components/ScreenShell';
 import { currentStop, isGroupage } from '@/lib/missions';
-import { isWithinWindow } from '@/lib/format';
+import { currentTime, isWithinWindow } from '@/lib/format';
 import type { ScreenProps } from '@/lib/types';
 
 export function DeliveryArrivalScreen({ mission, updateMission, goTo, back, addAlert, notify }: ScreenProps) {
@@ -32,8 +32,8 @@ export function DeliveryArrivalScreen({ mission, updateMission, goTo, back, addA
     goTo('missions');
   };
 
-  const scanDoc = (fileName: string) => {
-    updateMission({ documents: { ...mission.documents, [docKey]: fileName } });
+  const scanDoc = () => {
+    updateMission({ documents: { ...mission.documents, [docKey]: currentTime() } });
     notify(`${docLabel} scanné`);
   };
 
@@ -107,7 +107,7 @@ export function DeliveryArrivalScreen({ mission, updateMission, goTo, back, addA
             <div className="min-w-0">
               <p className="text-[16px] font-semibold leading-snug">Scan obligatoire</p>
               <p className={isScanned ? 'text-sm text-success' : 'text-sm text-danger'}>
-                {isScanned ? `Scanné : ${mission.documents[docKey]}` : 'En attente de scan'}
+                {isScanned ? `Scanné à ${mission.documents[docKey]}` : 'En attente de scan'}
               </p>
             </div>
           </div>
@@ -127,7 +127,7 @@ export function DeliveryArrivalScreen({ mission, updateMission, goTo, back, addA
             className="hidden"
             onChange={(event) => {
               const file = event.target.files?.[0];
-              if (file) scanDoc(file.name);
+              if (file) scanDoc();
               event.target.value = '';
             }}
           />
