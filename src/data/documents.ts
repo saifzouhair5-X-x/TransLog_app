@@ -12,31 +12,37 @@ export const ALL_DOCUMENTS: { id: DocumentId; label: string }[] = [
   { id: 'fumigation', label: 'Certificat de fumigation des palettes' },
 ];
 
-export function documentsForMission(mission: Mission): { id: DocumentId; label: string; required: boolean }[] {
-  const required = new Set<DocumentId>();
+/** Lettre de voiture : BL pour une mission au Maroc, CMR pour une mission internationale. */
+export function lettreDeVoiture(mission: Mission): { id: DocumentId; label: string; detail: string } {
+  return mission.type === 'internationale'
+    ? { id: 'cmr', label: 'CMR / BL', detail: 'CMR : mission internationale' }
+    : { id: 'bl', label: 'CMR / BL', detail: 'BL : mission au Maroc' };
+}
 
-  // CMR et BL : toujours présents, pour toutes les missions
-  required.add('cmr');
-  required.add('bl');
+export function documentsForMission(
+  mission: Mission
+): { id: DocumentId; label: string; detail?: string; required: boolean }[] {
+  const lettre = lettreDeVoiture(mission);
+  const docs: { id: DocumentId; label: string; detail?: string; required: boolean }[] = [
+    { id: lettre.id, label: lettre.label, detail: lettre.detail, required: true },
+  ];
+  const add = (id: DocumentId) => {
+    const doc = ALL_DOCUMENTS.find((item) => item.id === id);
+    if (doc) docs.push({ ...doc, required: true });
+  };
 
+  add('facture');
+  add('colisage');
   if (mission.type === 'internationale') {
-    required.add('tir');
-    required.add('dum');
-    required.add('eur1');
-    if (mission.agroalimentaire) {
-      required.add('phytosanitaire');
-    }
+    add('tir');
+    add('dum');
+    add('eur1');
   }
+  // Certificat phytosanitaire : pour toute marchandise agroalimentaire
+  if (mission.agroalimentaire) add('phytosanitaire');
+  add('fumigation');
 
-  // Common documents
-  required.add('facture');
-  required.add('colisage');
-  required.add('fumigation');
-
-  return ALL_DOCUMENTS.filter((doc) => required.has(doc.id)).map((doc) => ({
-    ...doc,
-    required: true,
-  }));
+  return docs;
 }
 
 export function emptyDocuments(): DocumentsState {

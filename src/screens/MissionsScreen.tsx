@@ -75,13 +75,23 @@ export function MissionsScreen({ missions, driver, unread, onSelect, goTo }: Mis
       )}
 
       {visible.map((mission, index) => (
-        <MissionCard key={mission.id} mission={mission} index={index} onSelect={onSelect} />
+        <MissionCard key={mission.id} mission={mission} index={index} onSelect={onSelect} showPrice={driver.type === 'independant'} />
       ))}
     </ScreenShell>
   );
 }
 
-function MissionCard({ mission, index, onSelect }: { mission: Mission; index: number; onSelect: (mission: Mission) => void }) {
+function MissionCard({
+  mission,
+  index,
+  onSelect,
+  showPrice,
+}: {
+  mission: Mission;
+  index: number;
+  onSelect: (mission: Mission) => void;
+  showPrice: boolean;
+}) {
   const route = [mission.origin, ...mission.stops.map((stop) => stop.ville)];
   const cancelled = mission.statut === 'refusee' || mission.statut === 'annulee';
 
@@ -138,10 +148,12 @@ function MissionCard({ mission, index, onSelect }: { mission: Mission; index: nu
         <span>
           {totalPalettes(mission)} palettes{mission.typePalette ? ` ${mission.typePalette.startsWith('Palette Europe') ? 'Europe' : 'industrielles'}` : ''} · {mission.stops.length} livraison(s)
         </span>
-        <span className="flex items-center gap-1.5 text-[15px] font-semibold tabular-nums text-night">
+        {showPrice && (
+          <span className="flex items-center gap-1.5 text-[15px] font-semibold tabular-nums text-night">
           <Banknote size={16} className="text-slate-400" />
           {formatMAD(mission.prix)}
         </span>
+        )}
       </div>
     </button>
   );

@@ -90,28 +90,32 @@ export function MissionDetailScreen({ mission, updateMission, goTo, back, addAle
         )}
       </div>
 
-      <Card className="space-y-2">
-        <p className="flex items-center gap-2 text-[12px] font-semibold uppercase tracking-[0.06em] text-slate-500">
-          <Banknote size={16} />
-          Prix de la mission
-        </p>
-        <p className="text-[30px] font-semibold leading-tight tracking-[-0.03em] tabular-nums text-night">{formatMAD(mission.prix)}</p>
-        {mission.contreProposition !== null && (
-          <p className="text-sm font-semibold text-sun">
-            Votre contre-proposition : {formatMAD(mission.contreProposition)}
+      {isIndependant ? (
+        <Card className="space-y-2">
+          <p className="flex items-center gap-2 text-[12px] font-semibold uppercase tracking-[0.06em] text-slate-500">
+            <Banknote size={16} />
+            Prix de la mission
           </p>
-        )}
-        {!isIndependant && (
-          <p className="text-sm text-slate-500">
-            Frais remboursables : {formatMAD(totalFrais)}
-            {mission.expenses.length > 0 && (
-              <span className="ml-1 text-slate-400">
-                ({mission.expenses.map((e) => `${e.label} ${formatMAD(e.amount)}`).join(' · ')})
-              </span>
-            )}
+          <p className="text-[30px] font-semibold leading-tight tracking-[-0.03em] tabular-nums text-night">{formatMAD(mission.prix)}</p>
+          {mission.contreProposition !== null && (
+            <p className="text-sm font-semibold text-sun">
+              Votre contre-proposition : {formatMAD(mission.contreProposition)}
+            </p>
+          )}
+        </Card>
+      ) : (
+        <Card className="space-y-2">
+          <p className="flex items-center gap-2 text-[12px] font-semibold uppercase tracking-[0.06em] text-slate-500">
+            <Banknote size={16} />
+            Frais remboursables
           </p>
-        )}
-      </Card>
+          <p className="text-[30px] font-semibold leading-tight tracking-[-0.03em] tabular-nums text-night">{formatMAD(totalFrais)}</p>
+          {mission.expenses.length > 0 && (
+            <p className="text-sm text-slate-500">{mission.expenses.map((e) => `${e.label} ${formatMAD(e.amount)}`).join(' · ')}</p>
+          )}
+          <p className="text-[13px] text-slate-500">Le prix de la mission est géré par votre transporteur.</p>
+        </Card>
+      )}
 
       {cout && (
         <Card className="divide-y divide-line p-0">
@@ -128,7 +132,7 @@ export function MissionDetailScreen({ mission, updateMission, goTo, back, addAle
           <InfoRow label={mission.type === 'internationale' ? 'Péages Maroc (ADM)' : 'Péages autoroute'} value={formatMAD(cout.peage)} />
           {cout.traversee > 0 && <InfoRow label="Traversée Tanger Med – Algésiras" value={formatMAD(cout.traversee)} />}
           <InfoRow label="Total des coûts" value={formatMAD(cout.total)} />
-          <InfoRow label={isIndependant ? 'Marge avant salaire et entretien' : 'Écart prix / coûts'} value={formatMAD(mission.prix - cout.total)} />
+          {isIndependant && <InfoRow label="Marge avant salaire et entretien" value={formatMAD(mission.prix - cout.total)} />}
           <p className="p-4 text-[12px] leading-relaxed text-slate-500">{SOURCE_COUTS}</p>
         </Card>
       )}
